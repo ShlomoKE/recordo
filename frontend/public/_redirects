@@ -1,3 +1,0 @@
-# Cloudflare Pages Redirects & SPA Fallback
-/api/*  https://recordo-backend-production.up.railway.app/api/:splat  200
-/*      /index.html                                                     200

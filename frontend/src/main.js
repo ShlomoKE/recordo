@@ -382,7 +382,7 @@ function renderLandingPageHTML() {
           <div>
             <h4 style="margin-bottom: 1rem; color: var(--primary);">Atención Inmediata</h4>
             <div style="display: flex; flex-direction: column; gap: 1rem;">
-              <a href="https://wa.me/525598765432" target="_blank" class="btn btn-secondary" style="justify-content: center; text-decoration: none;">${icons.phone} Chatear por WhatsApp Directo</a>
+              <a href="https://wa.me/5215621497636" target="_blank" class="btn btn-secondary" style="justify-content: center; text-decoration: none;">${icons.phone} WhatsApp: +52 1 56 2149 7636</a>
               <div style="padding: 1rem; background: var(--bg-subtle); border-radius: var(--radius-md); font-size: 0.9rem;">
                 <strong>Correo Electrónico:</strong><br/>
                 <a href="mailto:hola@recordo.mx" style="color: var(--primary); text-decoration: none; font-weight: 600;">hola@recordo.mx</a>
@@ -462,6 +462,55 @@ function renderLandingPageHTML() {
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar a Mi Panel de la Familia</button>
         <p style="font-size: 0.8rem; margin-top: 1rem; color: var(--text-muted); text-align: center;">Código de prueba precargado: <strong>REC-2026-8841</strong></p>
+      </form>
+    </div>
+  <!-- Modal Cotización Corporativa -->
+  <div class="modal-backdrop" id="corpQuoteModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <button class="modal-close" id="btnCloseCorpModal">✕</button>
+      <div class="modal-header">
+        <div class="badge badge-sage" style="margin-bottom: 0.4rem;">${icons.sparkles} Empresas & Recursos Humanos</div>
+        <h3>Cotización de Paquetes Corporativos</h3>
+        <p>Regala a tus colaboradores el beneficio más humano: el libro con las historias de vida de sus familias.</p>
+      </div>
+      <form id="corpQuoteForm" style="display: flex; flex-direction: column; gap: 0.85rem; margin-top: 1rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+          <div>
+            <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Nombre de la Empresa:</label>
+            <input type="text" class="dash-input" required placeholder="Ej. Grupo Modelo, Bimbo, etc." />
+          </div>
+          <div>
+            <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Tu Nombre y Cargo:</label>
+            <input type="text" class="dash-input" required placeholder="Ej. Carlos Vera • Dir. RH" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+          <div>
+            <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Correo Corporativo:</label>
+            <input type="email" class="dash-input" required placeholder="carlos@empresa.com" />
+          </div>
+          <div>
+            <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Teléfono / WhatsApp:</label>
+            <input type="tel" class="dash-input" required placeholder="55 1234 5678" />
+          </div>
+        </div>
+
+        <div>
+          <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Número Estimado de Libros / Empleados:</label>
+          <select class="dash-input">
+            <option value="10-50">10 a 50 Libros (Paquete Equipo Directivo)</option>
+            <option value="50-200">50 a 200 Libros (Paquete Corporativo / Fin de Año)</option>
+            <option value="200+">Más de 200 Libros (Gran Empresa / Prestación Anual)</option>
+          </select>
+        </div>
+
+        <div>
+          <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Notas adicionales o requerimientos:</label>
+          <textarea class="dash-input" rows="2" placeholder="Ej. Buscamos personalizar la portada con el logo de la empresa..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; width: 100%;">Enviar Solicitud de Cotización</button>
       </form>
     </div>
   </div>
@@ -1047,8 +1096,38 @@ function bindLandingEvents() {
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('📩 ¡Mensaje enviado con éxito! Un asesor de Recordo se pondrá en contacto contigo a la brevedad.');
+      alert('📩 ¡Mensaje enviado con éxito! Un asesor de Recordo se pondrá en contacto contigo a la brevedad vía WhatsApp o correo.');
       contactForm.reset();
+    });
+  }
+
+  // Modal Cotización Corporativa
+  const btnCorpModal = document.querySelector('#btn-corp-modal');
+  const corpModal = document.querySelector('#corpQuoteModal');
+  const btnCloseCorpModal = document.querySelector('#btnCloseCorpModal');
+  const corpQuoteForm = document.querySelector('#corpQuoteForm');
+
+  if (btnCorpModal && corpModal) {
+    btnCorpModal.addEventListener('click', () => {
+      corpModal.classList.add('active');
+    });
+  }
+
+  if (btnCloseCorpModal && corpModal) {
+    btnCloseCorpModal.addEventListener('click', () => {
+      corpModal.classList.remove('active');
+    });
+    corpModal.addEventListener('click', (e) => {
+      if (e.target === corpModal) corpModal.classList.remove('active');
+    });
+  }
+
+  if (corpQuoteForm && corpModal) {
+    corpQuoteForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('🏢 ¡Solicitud de cotización corporativa enviada con éxito! Un asesor especializado se comunicará con tu empresa en menos de 24 horas.');
+      corpModal.classList.remove('active');
+      corpQuoteForm.reset();
     });
   }
 }

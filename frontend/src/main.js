@@ -124,7 +124,7 @@ function renderLandingPageHTML() {
       <div class="hero-content">
         <div class="badge badge-sage">${icons.phone} Tan fácil como enviar un audio</div>
         <h1>El libro de recuerdos de tus familiares.</h1>
-        <p>Sin apps ni descargas. Solo responden notas de voz a su ritmo y nosotros transcribimos, diseñamos e imprimimos su historia en pasta dura.</p>
+        <p>Sin apps ni descargas. Solo responden notas de voz a su ritmo y nosotros nos encargamos de transcribir, diseñar y crear su libro de memorias.</p>
         <div class="hero-ctas">
           <a href="#precios" class="btn btn-primary">Comenzar Libro de Memorias</a>
           <a href="#simulador" class="btn btn-outline">Probar Simulador de WhatsApp</a>
@@ -177,8 +177,8 @@ function renderLandingPageHTML() {
             <div class="step-num" style="margin-bottom: 0; font-size: 1.5rem;">04</div>
             <div class="icon-box icon-box-sage">${icons.book}</div>
           </div>
-          <h4>Libro Editorial Impreso</h4>
-          <p>Compilamos, diseñamos e imprimimos un libro empastado con acabados de lujo y envío gratis.</p>
+          <h4>Tu Libro de Recuerdos</h4>
+          <p>Recibe tu edición digital o impresa con encuadernación editorial y envío a domicilio.</p>
         </div>
       </div>
 

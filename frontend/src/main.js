@@ -289,7 +289,7 @@ function renderLandingPageHTML() {
         <div class="pricing-card">
           <h3>Libro Básico</h3>
           <p>Edición en pasta blanda con interior en blanco y negro.</p>
-          <div class="pricing-price">$1,699 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
+          <div class="pricing-price">$1,599 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
           <ul class="pricing-features">
             <li>${icons.check} 1 Libro Físico en Pasta Blanda</li>
             <li>${icons.check} Impresión interior en Blanco y Negro</li>

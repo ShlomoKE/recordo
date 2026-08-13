@@ -272,17 +272,18 @@ function renderLandingPageHTML() {
       </div>
 
       <div class="pricing-grid">
-        <div class="pricing-card">
+        <div class="pricing-card featured">
+          <div class="badge badge-sage" style="align-self: flex-start;">${icons.sparkles} Más Vendido</div>
           <h3>Memorias Digitales</h3>
-          <p>Edición 100% digital ideal para leer en iPad, Kindle o celular.</p>
+          <p>Edición 100% digital. Acceso de 4 meses al portal en vivo y posterior descarga para conservarlo para siempre.</p>
           <div class="pricing-price">$999 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
           <ul class="pricing-features">
             <li>${icons.check} 12 Semanas de Entrevistas por WhatsApp</li>
+            <li>${icons.check} 4 Meses de acceso activo al Portal de la Familia</li>
             <li>${icons.check} Transcripción automática de notas de voz</li>
-            <li>${icons.check} Portal de la Familia para escuchar audios</li>
-            <li>${icons.check} Libro Digital PDF/ePub de alta resolución</li>
+            <li>${icons.check} Descarga del Libro Digital PDF/ePub para conservarlo para siempre</li>
           </ul>
-          <button class="btn btn-outline checkout-trigger-btn" data-plan="digital">Ordenar Plan Digital</button>
+          <button class="btn btn-secondary checkout-trigger-btn" data-plan="digital">Ordenar Plan Digital</button>
         </div>
 
         <div class="pricing-card">
@@ -299,8 +300,7 @@ function renderLandingPageHTML() {
           <button class="btn btn-outline checkout-trigger-btn" data-plan="basic">Ordenar Libro Básico</button>
         </div>
 
-        <div class="pricing-card featured">
-          <div class="badge badge-sage" style="align-self: flex-start;">${icons.sparkles} Más Vendido</div>
+        <div class="pricing-card">
           <h3>Libro Premium</h3>
           <p>Edición empastada en pasta dura con interior a todo color.</p>
           <div class="pricing-price">$2,999 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
@@ -312,7 +312,7 @@ function renderLandingPageHTML() {
             <li>${icons.check} Portal de la Familia e historias de audio</li>
             <li>${icons.check} Envío gratis a todo México</li>
           </ul>
-          <button class="btn btn-secondary checkout-trigger-btn" data-plan="premium">Comprar Libro Premium</button>
+          <button class="btn btn-outline checkout-trigger-btn" data-plan="premium">Comprar Libro Premium</button>
         </div>
       </div>
     </div>

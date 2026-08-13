@@ -419,7 +419,9 @@ function renderLandingPageHTML() {
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a href="#" class="logo" style="margin-bottom: 1rem;"><img src="/logo.jpeg" alt="Recordo Logo" class="brand-logo-img" style="filter: brightness(0) invert(1) opacity(0.95); mix-blend-mode: normal;" /></a>
+          <a href="#" class="logo" style="display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #FAF3E8; font-family: var(--font-serif); font-size: 1.7rem; font-weight: 700; margin-bottom: 0.8rem;">
+            <span style="color: var(--accent-gold); display: flex;">${icons.book}</span> Recordo
+          </a>
           <p style="color: #A09588;">Preservando la tradición oral y el legado familiar en México a través de conversaciones sencillas por WhatsApp.</p>
         </div>
         <div>

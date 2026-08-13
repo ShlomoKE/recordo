@@ -1,9 +1,12 @@
 name = "recordo"
-pages_build_output_dir = "frontend/dist"
 compatibility_date = "2026-08-13"
+
+[build]
+command = "npm --prefix frontend install && npm --prefix frontend run build"
 
 [assets]
 directory = "frontend/dist"
+binding = "ASSETS"
 
 [vars]
 ENVIRONMENT = "production"

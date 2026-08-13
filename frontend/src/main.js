@@ -464,6 +464,8 @@ function renderLandingPageHTML() {
         <p style="font-size: 0.8rem; margin-top: 1rem; color: var(--text-muted); text-align: center;">Código de prueba precargado: <strong>REC-2026-8841</strong></p>
       </form>
     </div>
+  </div>
+
   <!-- Modal Cotización Corporativa -->
   <div class="modal-backdrop" id="corpQuoteModal">
     <div class="modal-card" style="max-width: 540px;">

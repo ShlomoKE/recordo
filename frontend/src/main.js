@@ -274,44 +274,45 @@ function renderLandingPageHTML() {
       <div class="pricing-grid">
         <div class="pricing-card">
           <h3>Memorias Digitales</h3>
-          <p>Ideal para familias que prefieren leer en iPad o Kindle.</p>
-          <div class="pricing-price">$1,499 <span style="font-size: 1rem; color: var(--text-muted);">MXN</span></div>
+          <p>Edición 100% digital ideal para leer en iPad, Kindle o celular.</p>
+          <div class="pricing-price">$999 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
           <ul class="pricing-features">
             <li>${icons.check} 12 Semanas de Entrevistas por WhatsApp</li>
             <li>${icons.check} Transcripción automática de notas de voz</li>
-            <li>${icons.check} Portal de la Familia para descargar audios</li>
+            <li>${icons.check} Portal de la Familia para escuchar audios</li>
             <li>${icons.check} Libro Digital PDF/ePub de alta resolución</li>
           </ul>
           <button class="btn btn-outline checkout-trigger-btn" data-plan="digital">Ordenar Plan Digital</button>
         </div>
 
+        <div class="pricing-card">
+          <h3>Libro Básico</h3>
+          <p>Edición en pasta blanda con interior en blanco y negro.</p>
+          <div class="pricing-price">$1,699 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
+          <ul class="pricing-features">
+            <li>${icons.check} 1 Libro Físico en Pasta Blanda</li>
+            <li>${icons.check} Impresión interior en Blanco y Negro</li>
+            <li>${icons.check} Incluye también la edición Digital (PDF/ePub)</li>
+            <li>${icons.check} Entrevistas por WhatsApp y Portal Familiar</li>
+            <li>${icons.check} Envío a todo México</li>
+          </ul>
+          <button class="btn btn-outline checkout-trigger-btn" data-plan="basic">Ordenar Libro Básico</button>
+        </div>
+
         <div class="pricing-card featured">
           <div class="badge badge-sage" style="align-self: flex-start;">${icons.sparkles} Más Vendido</div>
-          <h3>Libro Empastado</h3>
-          <p>Edición empastada en pasta dura con acabado de lujo.</p>
-          <div class="pricing-price">$2,899 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
+          <h3>Libro Premium</h3>
+          <p>Edición empastada en pasta dura con interior a todo color.</p>
+          <div class="pricing-price">$2,999 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
           <ul class="pricing-features">
-            <li>${icons.check} 24 Semanas de Entrevistas por WhatsApp</li>
             <li>${icons.check} 1 Libro Físico Empastado en Pasta Dura</li>
-            <li>${icons.check} Hasta 40 Fotografías a todo color</li>
+            <li>${icons.check} Impresión interior a Todo Color de lujo</li>
+            <li>${icons.check} Incluye también la edición Digital completa</li>
+            <li>${icons.check} Hasta 40 Fotografías familiares a color</li>
             <li>${icons.check} Portal de la Familia e historias de audio</li>
             <li>${icons.check} Envío gratis a todo México</li>
           </ul>
-          <button class="btn btn-secondary checkout-trigger-btn" data-plan="hardcover">Comprar Edición Empastada</button>
-        </div>
-
-        <div class="pricing-card">
-          <h3>Colección Deluxe</h3>
-          <p>Paquete completo para compartir entre hermanos y nietos.</p>
-          <div class="pricing-price">$4,299 <span style="font-size: 1rem; color: var(--text-muted);">MXN</span></div>
-          <ul class="pricing-features">
-            <li>${icons.check} 3 Meses ilimitados de pláticas por WhatsApp</li>
-            <li>${icons.check} 3 Ejemplares Impresos en Pasta Dura</li>
-            <li>${icons.check} Código QR impreso en el libro para escuchar audios reales</li>
-            <li>${icons.check} Asistencia telefónica personalizada</li>
-            <li>${icons.check} Envío gratis a todo México</li>
-          </ul>
-          <button class="btn btn-outline checkout-trigger-btn" data-plan="deluxe">Comprar Colección Deluxe</button>
+          <button class="btn btn-secondary checkout-trigger-btn" data-plan="premium">Comprar Libro Premium</button>
         </div>
       </div>
     </div>

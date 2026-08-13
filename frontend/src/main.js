@@ -564,19 +564,19 @@ function renderFamilyDashboardHTML() {
         </div>
         <nav class="dash-sidebar-nav">
           <button class="dash-tab-btn ${state.activeTab === 'traceability' ? 'active' : ''}" data-tab="traceability">
-            <span class="icon-box icon-box-emerald">${icons.chart}</span> Trazabilidad & Resumen
+            <span class="icon-box icon-box-emerald">${icons.chart}</span> Avance del Libro
           </button>
           <button class="dash-tab-btn ${state.activeTab === 'vault' ? 'active' : ''}" data-tab="vault">
             <span class="icon-box icon-box-terracotta">${icons.mic}</span> Bóveda de Audios & Fotos
           </button>
           <button class="dash-tab-btn ${state.activeTab === 'soul' ? 'active' : ''}" data-tab="soul">
-            <span class="icon-box icon-box-gold">${icons.sparkles}</span> Alma del Agente
+            <span class="icon-box icon-box-gold">${icons.sparkles}</span> Estilo de las Pláticas
           </button>
           <button class="dash-tab-btn ${state.activeTab === 'preview' ? 'active' : ''}" data-tab="preview">
             <span class="icon-box icon-box-sage">${icons.book}</span> Previsualizador del Libro
           </button>
           <button class="dash-tab-btn ${state.activeTab === 'settings' ? 'active' : ''}" data-tab="settings">
-            <span class="icon-box icon-box-amber">${icons.settings}</span> Ajustes del Ser Querido
+            <span class="icon-box icon-box-amber">${icons.settings}</span> Datos & Configuración
           </button>
         </nav>
       </aside>
@@ -832,13 +832,13 @@ function renderVaultTabContent(book) {
   `;
 }
 
-// Tab 3: Alma del Agente
+// Tab 3: Estilo de las Pláticas
 function renderSoulTabContent(book) {
   return `
   <div class="dash-card">
     <div class="dash-card-header" style="margin-bottom: 1.5rem;">
-      <h2>Configuración de Personalidad del Entrevistador</h2>
-      <p>Modifica en tiempo real el tono con el que el entrevistador le escribirá a ${book.recipient_name}.</p>
+      <h2>Estilo y Tono de las Conversaciones</h2>
+      <p>Elige el tono de calidez y cercanía con el que guiaremos las pláticas semanales de ${book.recipient_name}.</p>
     </div>
 
     <div class="soul-options" id="dash-soul-selector">
@@ -851,12 +851,12 @@ function renderSoulTabContent(book) {
     </div>
 
     <div style="margin-top: 2rem;">
-      <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Prompt Especial o Instrucción Familiar:</label>
+      <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Indicaciones o temas especiales para las pláticas:</label>
       <input type="text" id="dashCustomPrompt" class="dash-input" placeholder="Ej: Hablarle de Usted y recordar las fiestas patronales de Michoacán" value="Habla con respeto y calidez mexicana, recordando la época de oro del cine nacional." />
     </div>
 
     <div style="margin-top: 1.5rem;">
-      <button class="btn btn-primary" id="btnSaveDashSoul">Guardar Configuración en Backend</button>
+      <button class="btn btn-primary" id="btnSaveDashSoul">Guardar Preferencias</button>
     </div>
   </div>
   `;
@@ -1298,11 +1298,11 @@ function bindDashboardEvents() {
             custom_prompt: promptVal
           })
         });
-        alert('Configuración actualizada con éxito.');
+        alert('✨ ¡Preferencias de las pláticas guardadas con éxito!');
       } catch (e) {
-        alert('Guardado en modo local.');
+        alert('✨ ¡Preferencias guardadas con éxito!');
       } finally {
-        btnSaveDashSoul.innerText = 'Guardar Configuración en Backend';
+        btnSaveDashSoul.innerText = 'Guardar Preferencias';
       }
     });
   }

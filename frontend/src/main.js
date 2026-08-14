@@ -257,9 +257,14 @@ function renderLandingActiveTabContent() {
    ========================================================================== */
 function renderTabInicioHTML() {
   return `
-  <!-- Hero Section Amplio & Editorial -->
+  <!-- Hero Section Amplio & Editorial con Libro Arriba -->
   <section class="hero">
-    <div class="container hero-grid">
+    <div class="container hero-grid hero-book-top">
+      <div class="hero-preview-book">
+        <div class="real-book-container">
+          <img src="/real-book.png" alt="Libro Impreso Real de Recordo" class="real-book-img" />
+        </div>
+      </div>
       <div class="hero-content">
         <div class="badge badge-sage">${icons.phone} Tan fácil como enviar un audio</div>
         <h1>El libro de recuerdos de tus familiares.</h1>
@@ -267,11 +272,6 @@ function renderTabInicioHTML() {
         <div class="hero-ctas">
           <a href="#precios" class="btn btn-primary btn-hero-main">Comenzar Libro de Memorias</a>
           <a href="#como-funciona-resumen" class="btn btn-outline">Conocer los 4 Pasos ↓</a>
-        </div>
-      </div>
-      <div class="hero-preview-book">
-        <div class="real-book-container">
-          <img src="/real-book.png" alt="Libro Impreso Real de Recordo" class="real-book-img" />
         </div>
       </div>
     </div>

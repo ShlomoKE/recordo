@@ -120,16 +120,6 @@ function renderLandingPageHTML() {
     </div>
   </nav>
 
-  <!-- Barra de Pestañas Móvil (Sticky Top Tabs para Teléfono) -->
-  <div class="mobile-subnav-container">
-    <div class="mobile-tab-bar">
-      <button class="mobile-tab-btn ${state.landingTab === 'inicio' ? 'active' : ''}" data-tab="inicio">${icons.home} Inicio</button>
-      <button class="mobile-tab-btn ${state.landingTab === 'como-funciona' ? 'active' : ''}" data-tab="como-funciona">${icons.book} Cómo Funciona</button>
-      <button class="mobile-tab-btn ${state.landingTab === 'empresas' ? 'active' : ''}" data-tab="empresas">${icons.user} Empresas</button>
-      <button class="mobile-tab-btn ${state.landingTab === 'faq' ? 'active' : ''}" data-tab="faq">${icons.phone} Preguntas</button>
-    </div>
-  </div>
-
   <!-- Contenido Dinámico de la Pestaña Activa -->
   <main class="landing-tab-content-wrapper">
     ${renderLandingActiveTabContent()}

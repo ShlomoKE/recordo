@@ -253,20 +253,20 @@ function renderLandingActiveTabContent() {
 }
 
 /* ==========================================================================
-   PESTAÑA 1: INICIO (HERO LIMPIO + RESUMEN RÁPIDO + PRECIOS INMEDIATOS)
+   PESTAÑA 1: INICIO (HERO AMPLIO + 4 PASOS + PRECIOS)
    ========================================================================== */
 function renderTabInicioHTML() {
   return `
-  <!-- Hero Section -->
+  <!-- Hero Section Amplio & Editorial -->
   <section class="hero">
     <div class="container hero-grid">
       <div class="hero-content">
         <div class="badge badge-sage">${icons.phone} Tan fácil como enviar un audio</div>
         <h1>El libro de recuerdos de tus familiares.</h1>
-        <p>Sin apps ni descargas. Solo responden notas de voz a su ritmo y nosotros creamos su libro de memorias inolvidable.</p>
+        <p>Sin aplicaciones difíciles ni descargas. Tus seres queridos solo responden notas de voz a su propio ritmo por WhatsApp y nosotros nos encargamos de transcribir, diseñar y convertir toda su historia de vida en un libro de memorias que perdurará para siempre.</p>
         <div class="hero-ctas">
           <a href="#precios" class="btn btn-primary btn-hero-main">Comenzar Libro de Memorias</a>
-          <button class="landing-tab-trigger hero-sublink" data-tab="como-funciona">Conoce cómo funciona a detalle →</button>
+          <a href="#como-funciona-resumen" class="btn btn-outline">Conocer los 4 Pasos ↓</a>
         </div>
       </div>
       <div class="hero-preview-book">
@@ -277,45 +277,56 @@ function renderTabInicioHTML() {
     </div>
   </section>
 
-  <!-- Resumen Rápido en 3 Pasos -->
-  <section class="section-padding" style="background: var(--bg-subtle); padding: 2.5rem 0;">
+  <!-- Los 4 Pasos en la Pantalla Principal -->
+  <section id="como-funciona-resumen" class="section-padding" style="background: var(--bg-subtle);">
     <div class="container">
-      <div style="text-align: center; max-width: 650px; margin: 0 auto 1.8rem auto;">
-        <div class="badge">Proceso Sencillo</div>
-        <h2>Tan fácil como platicar por WhatsApp</h2>
-        <p style="margin-top: 0.3rem;">Tus seres queridos participan sin fricción tecnológica.</p>
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 2.2rem auto;">
+        <div class="badge">Paso a Paso</div>
+        <h2>Tan fácil como mandar un mensaje de voz</h2>
+        <p style="margin-top: 0.4rem;">Diseñado especialmente para que tus familiares participen sin fricción tecnológica ni descargas complicadas.</p>
       </div>
 
-      <div class="steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem;">
+      <div class="steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.4rem; margin-bottom: 2rem;">
         <div class="stat-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-            <div class="step-num" style="margin-bottom: 0; font-size: 1.4rem;">01</div>
-            <div class="icon-box icon-box-emerald">${icons.mic}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem;">
+            <div class="step-num" style="font-size: 1.5rem; margin: 0;">01</div>
+            <div class="icon-box icon-box-emerald">${icons.phone}</div>
           </div>
-          <h4>Envían notas de voz</h4>
-          <p>Cada semana reciben una pregunta entrañable a su WhatsApp y contestan con un audio a su propio ritmo.</p>
+          <h4>Pregunta por WhatsApp</h4>
+          <p>Cada semana enviaremos una pregunta entrañable a su celular en el horario que prefiera.</p>
         </div>
+
         <div class="stat-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-            <div class="step-num" style="margin-bottom: 0; font-size: 1.4rem;">02</div>
-            <div class="icon-box icon-box-gold">${icons.sparkles}</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem;">
+            <div class="step-num" style="font-size: 1.5rem; margin: 0;">02</div>
+            <div class="icon-box icon-box-terracotta">${icons.mic}</div>
           </div>
-          <h4>Diseñamos su historia</h4>
-          <p>Transcribimos con fidelidad, organizamos los capítulos cronológicamente y agregamos fotos familiares.</p>
+          <h4>Respuesta de Voz o Texto</h4>
+          <p>Puede responder mandando audios de voz o mensajes de texto. La IA transcribe y organiza su relato.</p>
         </div>
+
         <div class="stat-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-            <div class="step-num" style="margin-bottom: 0; font-size: 1.4rem;">03</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem;">
+            <div class="step-num" style="font-size: 1.5rem; margin: 0;">03</div>
+            <div class="icon-box icon-box-gold">${icons.user}</div>
+          </div>
+          <h4>Portal de la Familia</h4>
+          <p>La familia inicia sesión para escuchar los audios, revisar el progreso y agregar fotografías.</p>
+        </div>
+
+        <div class="stat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem;">
+            <div class="step-num" style="font-size: 1.5rem; margin: 0;">04</div>
             <div class="icon-box icon-box-sage">${icons.book}</div>
           </div>
-          <h4>Reciben su libro</h4>
-          <p>Edición digital descargable o libro físico de lujo empastado en pasta dura con envío a todo México.</p>
+          <h4>Tu Libro de Recuerdos</h4>
+          <p>Recibe tu edición digital o impresa con encuadernación editorial y envío a domicilio.</p>
         </div>
       </div>
 
-      <div style="text-align: center; margin-top: 1rem;">
-        <button class="btn btn-outline landing-tab-trigger" data-tab="como-funciona" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">
-          ${icons.book} Ver Explicación Detallada & Personalización de Pláticas →
+      <div style="text-align: center; margin-top: 1.2rem;">
+        <button class="btn btn-outline landing-tab-trigger" data-tab="como-funciona" style="padding: 0.7rem 1.6rem; font-size: 0.92rem;">
+          ${icons.sparkles} Personalización de Pláticas & Simulador →
         </button>
       </div>
     </div>

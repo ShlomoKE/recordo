@@ -1363,45 +1363,50 @@ footer {
     display: inline-block !important;
   }
 
-  /* Hero Section Compacto en Móvil */
+  /* Hero Section Amplio en Móvil */
   .hero {
     min-height: auto;
-    padding: 1.2rem 0 1.5rem 0;
+    padding: 2.8rem 0 3.2rem 0;
   }
 
   .hero-grid {
     grid-template-columns: 1fr;
-    gap: 1.1rem;
+    gap: 2rem;
     text-align: center;
   }
 
+  .hero-content h1 {
+    font-size: clamp(1.95rem, 6.8vw, 2.4rem) !important;
+    line-height: 1.25 !important;
+  }
+
   .hero-content p {
-    font-size: 0.95rem;
-    margin: 0.6rem auto 1.1rem auto;
-    line-height: 1.4;
+    font-size: 1.02rem;
+    margin: 0.9rem auto 1.6rem auto;
+    line-height: 1.55;
   }
 
   .hero-ctas {
     flex-direction: column;
     width: 100%;
-    gap: 0.5rem;
+    gap: 0.75rem;
     align-items: center;
   }
 
   .hero-ctas .btn {
     width: 100%;
-    padding: 0.85rem 1.2rem;
-    font-size: 0.98rem;
+    padding: 0.95rem 1.4rem;
+    font-size: 1rem;
     justify-content: center;
   }
 
   .real-book-container {
-    max-width: 230px;
-    margin: 0 auto;
+    max-width: 300px;
+    margin: 0.8rem auto 0 auto;
   }
 
   .real-book-img {
-    max-height: 210px;
+    max-height: 280px;
     width: 100%;
   }
 

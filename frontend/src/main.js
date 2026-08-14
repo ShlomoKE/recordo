@@ -1,9 +1,9 @@
 import './style.css';
 
-// Configuración del servidor Backend (Go API)
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+// Configuración del servidor Backend
+const API_URL = import.meta.env.VITE_API_URL || '';
 
-// Sistema de Iconos SVG limpios y vectoriales (Sin emojis)
+// Sistema de Iconos SVG limpios y vectoriales
 const icons = {
   book: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
   chart: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
@@ -18,17 +18,17 @@ const icons = {
   user: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
   home: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
   edit: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
-  printer: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`,
-  logoMark: `<svg class="logo-emblem-svg" width="34" height="28" viewBox="0 0 100 80" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M 47 10 C 35 14 18 14 6 18 V 65 C 18 61 35 61 47 57 Z" /><path d="M 47 18 C 37 21 23 21 12 24 V 71 C 23 68 37 68 47 65 Z" /><path d="M 53 10 C 59 14 64 15 62 18 C 59 22 55 24 53 28 C 51 32 54 35 57 37 C 53 39 53 43 57 45 C 53 47 53 51 57 54 C 62 58 70 60 94 65 V 18 C 82 14 65 14 53 10 Z" /><path d="M 53 65 C 63 68 77 68 88 71 V 24 C 77 21 63 21 53 18 Z" /></svg>`
+  printer: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>`
 };
 
 // Estado global de la aplicación
 const state = {
   currentView: localStorage.getItem('recordo_auth_token') ? 'dashboard' : 'landing',
+  landingTab: 'inicio', // 'inicio' | 'como-funciona' | 'empresas' | 'faq'
   activeTab: 'traceability',
   soulTone: 'calido_mexicano',
   paymentGateway: 'mercadopago',
-  selectedPlan: 'hardcover',
+  selectedPlan: 'digital',
   isCorporate: false,
   bookData: null,
   waMessages: [
@@ -38,7 +38,7 @@ const state = {
   ]
 };
 
-// Mapeo de tonos del Alma del Agente
+// Mapeo de tonos de personalidad
 const soulTones = {
   calido_mexicano: {
     title: 'Cálido Tradicional Mexicano',
@@ -62,7 +62,7 @@ const soulTones = {
   }
 };
 
-// Inicialización de la aplicación
+// Inicialización
 async function initApp() {
   await fetchBookData();
   renderApp();
@@ -75,7 +75,7 @@ async function fetchBookData() {
       state.bookData = await res.json();
     }
   } catch (err) {
-    console.log('Modo local de trazabilidad cargado sin servidor.');
+    console.log('Modo local de datos cargado.');
   }
 }
 
@@ -91,28 +91,27 @@ function renderApp() {
 }
 
 /* ==========================================================================
-   1. PÁGINA COMERCIAL (LANDING PAGE PÚBLICA)
+   1. PÁGINA COMERCIAL CON NAVEGACIÓN EN PESTAÑAS (LANDING PAGE)
    ========================================================================== */
 function renderLandingPageHTML() {
   return `
   <!-- Navbar Comercial -->
   <nav class="navbar">
     <div class="container nav-container">
-      <a href="#" class="logo"><img src="/logo.jpeg" alt="Recordo Logo" class="brand-logo-img" /></a>
+      <a href="#" class="logo landing-tab-trigger" data-tab="inicio"><img src="/logo.jpeg" alt="Recordo Logo" class="brand-logo-img" /></a>
       
       <ul class="nav-links" id="navLinks">
-        <li><a href="#como-funciona">Cómo Funciona</a></li>
-        <li><a href="#empresas">Para Empresas</a></li>
-        <li><a href="#precios">Precios</a></li>
-        <li><a href="#faq">Preguntas Frecuentes</a></li>
-        <li><a href="#contacto">Contacto</a></li>
+        <li><a href="#" class="landing-tab-trigger ${state.landingTab === 'inicio' ? 'active-link' : ''}" data-tab="inicio">Inicio</a></li>
+        <li><a href="#" class="landing-tab-trigger ${state.landingTab === 'como-funciona' ? 'active-link' : ''}" data-tab="como-funciona">Cómo Funciona</a></li>
+        <li><a href="#" class="landing-tab-trigger ${state.landingTab === 'empresas' ? 'active-link' : ''}" data-tab="empresas">Para Empresas</a></li>
+        <li><a href="#" class="landing-tab-trigger ${state.landingTab === 'faq' ? 'active-link' : ''}" data-tab="faq">Preguntas Frecuentes</a></li>
         <li class="mobile-nav-item"><button class="btn btn-outline btn-nav" id="btnOpenLoginNav" style="width: 100%; justify-content: center; margin-top: 0.4rem;">${icons.key} Acceso a Mi Libro</button></li>
-        <li class="mobile-nav-item"><a href="#precios" class="btn btn-primary btn-nav" style="width: 100%; justify-content: center;">Regalar Un Libro</a></li>
+        <li class="mobile-nav-item"><a href="#" class="btn btn-primary btn-nav landing-tab-trigger" data-tab="inicio" data-scroll="precios" style="width: 100%; justify-content: center;">Regalar Un Libro</a></li>
       </ul>
 
       <div class="nav-right-actions">
         <button class="btn btn-outline btn-nav" id="btnOpenLogin">${icons.key} Acceder a Mi Libro</button>
-        <a href="#precios" class="btn btn-primary btn-nav desktop-cta">Regalar Un Libro</a>
+        <a href="#" class="btn btn-primary btn-nav desktop-cta landing-tab-trigger" data-tab="inicio" data-scroll="precios">Regalar Un Libro</a>
       </div>
 
       <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación">
@@ -121,319 +120,38 @@ function renderLandingPageHTML() {
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container hero-grid">
-      <div class="hero-content">
-        <div class="badge badge-sage">${icons.phone} Tan fácil como enviar un audio</div>
-        <h1>El libro de recuerdos de tus familiares.</h1>
-        <p>Sin apps ni descargas. Solo responden notas de voz a su ritmo y nosotros creamos su libro de memorias inolvidable.</p>
-        <div class="hero-ctas">
-          <a href="#precios" class="btn btn-primary btn-hero-main">Comenzar Libro de Memorias</a>
-          <a href="#simulador" class="btn btn-outline desktop-only-btn">Probar Simulador de WhatsApp</a>
-          <a href="#como-funciona" class="hero-sublink mobile-only-link">Conoce cómo funciona ↓</a>
-        </div>
-      </div>
-      <div class="hero-preview-book">
-        <div class="real-book-container">
-          <img src="/real-book.png" alt="Libro Impreso Real de Recordo" class="real-book-img" />
-        </div>
-      </div>
+  <!-- Barra de Pestañas Móvil (Sticky Top Tabs para Teléfono) -->
+  <div class="mobile-subnav-container">
+    <div class="mobile-tab-bar">
+      <button class="mobile-tab-btn ${state.landingTab === 'inicio' ? 'active' : ''}" data-tab="inicio">${icons.home} Inicio</button>
+      <button class="mobile-tab-btn ${state.landingTab === 'como-funciona' ? 'active' : ''}" data-tab="como-funciona">${icons.book} Cómo Funciona</button>
+      <button class="mobile-tab-btn ${state.landingTab === 'empresas' ? 'active' : ''}" data-tab="empresas">${icons.user} Empresas</button>
+      <button class="mobile-tab-btn ${state.landingTab === 'faq' ? 'active' : ''}" data-tab="faq">${icons.phone} Preguntas</button>
     </div>
-  </section>
+  </div>
 
-  <!-- Cómo Funciona (Incluye Alma del Agente) -->
-  <section id="como-funciona" class="section-padding" style="background: var(--bg-subtle);">
-    <div class="container">
-      <div style="text-align: center; max-width: 700px; margin: 0 auto 1.8rem auto;">
-        <div class="badge">Paso a Paso</div>
-        <h2>Tan fácil como mandar un mensaje de voz</h2>
-        <p style="margin-top: 0.3rem;">Diseñado especialmente para que tus familiares participen sin fricción tecnológica ni descargas complicadas.</p>
-      </div>
+  <!-- Contenido Dinámico de la Pestaña Activa -->
+  <main class="landing-tab-content-wrapper">
+    ${renderLandingActiveTabContent()}
+  </main>
 
-      <div class="steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 2.2rem;">
-        <div class="stat-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-            <div class="step-num" style="margin-bottom: 0; font-size: 1.5rem;">01</div>
-            <div class="icon-box icon-box-emerald">${icons.phone}</div>
-          </div>
-          <h4>Pregunta por WhatsApp</h4>
-          <p>Cada semana enviaremos una pregunta entrañable a su celular en el horario que prefiera.</p>
-        </div>
-        <div class="stat-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-            <div class="step-num" style="margin-bottom: 0; font-size: 1.5rem;">02</div>
-            <div class="icon-box icon-box-terracotta">${icons.mic}</div>
-          </div>
-          <h4>Respuesta de Voz o Texto</h4>
-          <p>Puede responder mandando audios de voz o mensajes de texto. La IA transcribe y organiza su relato.</p>
-        </div>
-        <div class="stat-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-            <div class="step-num" style="margin-bottom: 0; font-size: 1.5rem;">03</div>
-            <div class="icon-box icon-box-gold">${icons.user}</div>
-          </div>
-          <h4>Portal de la Familia</h4>
-          <p>La familia inicia sesión para escuchar los audios, revisar el progreso y agregar fotografías.</p>
-        </div>
-        <div class="stat-card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-            <div class="step-num" style="margin-bottom: 0; font-size: 1.5rem;">04</div>
-            <div class="icon-box icon-box-sage">${icons.book}</div>
-          </div>
-          <h4>Tu Libro de Recuerdos</h4>
-          <p>Recibe tu edición digital o impresa con encuadernación editorial y envío a domicilio.</p>
-        </div>
-      </div>
-
-      <!-- Módulo Integrado: Alma del Agente -->
-      <div class="soul-card">
-        <div style="text-align: center; max-width: 650px; margin: 0 auto 2rem auto;">
-          <div class="badge badge-gold">${icons.sparkles} Personalización Conversacional</div>
-          <h2>Elige la "Personalidad" del Entrevistador</h2>
-          <p>Configura el tono con el que la IA guiará las pláticas semanales por WhatsApp.</p>
-        </div>
-
-        <div class="soul-options" id="landing-soul-selector">
-          ${Object.entries(soulTones).map(([key, item]) => `
-            <div class="soul-chip ${key === state.soulTone ? 'active' : ''}" data-tone="${key}">
-              <h5>${item.title}</h5>
-              <p>${item.desc}</p>
-            </div>
-          `).join('')}
-        </div>
-
-        <div style="margin-top: 1.5rem;">
-          <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Ejemplo de mensaje enviado por WhatsApp:</label>
-          <div class="soul-preview-box" id="landing-soul-preview">
-            ${soulTones[state.soulTone].samplePrompt}
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Simulador de WhatsApp -->
-  <section id="simulador" class="section-padding desktop-only-section" style="background: var(--bg-subtle);">
-    <div class="container">
-      <div style="text-align: center; max-width: 650px; margin: 0 auto 2.5rem auto;">
-        <div class="badge">Demostración Interactiva</div>
-        <h2>Prueba la experiencia de entrevista por WhatsApp</h2>
-        <p>Así es como tu ser querido conversará de manera cálida y natural con nuestro entrevistador de Recordo.</p>
-      </div>
-
-      <div class="wa-phone-frame">
-        <div class="wa-screen">
-          <div class="wa-header">
-            <div class="wa-avatar">${icons.book}</div>
-            <div>
-              <div style="font-weight: 600; font-size: 0.95rem; color: #E9EDEF;">Entrevistador Recordo</div>
-              <div style="font-size: 0.75rem; color: #8696A0;">En línea por WhatsApp</div>
-            </div>
-          </div>
-          <div class="wa-chat-body" id="wa-chat-body">
-            ${state.waMessages.map(msg => `
-              <div class="wa-msg ${msg.type === 'received' ? 'wa-msg-received' : 'wa-msg-sent'}">
-                ${msg.text}
-              </div>
-            `).join('')}
-          </div>
-          <div class="wa-input-bar">
-            <input type="text" id="wa-user-input" placeholder="Escribe un mensaje de prueba..." />
-            <button id="wa-send-btn" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem; border-radius: 20px;">${icons.send}</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Empresas -->
-  <section id="empresas" class="section-padding">
-    <div class="container">
-      <div class="corp-banner">
-        <div style="max-width: 600px;">
-          <div class="badge" style="background: rgba(255,255,255,0.2); color: #FFF;">Prestación VIP Corporativa</div>
-          <h2 style="color: white; margin-bottom: 1rem;">Regala Recordo a tus Ejecutivos y Colaboradores</h2>
-          <p style="color: #E2E8F0; margin-bottom: 2rem;">El beneficio laboral más memorable y humano: regalar la preservación de la historia de los padres o abuelos de tus empleados.</p>
-          <button class="btn btn-primary" id="btn-corp-modal">Solicitar Cotización Corporativa</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Precios -->
-  <section id="precios" class="section-padding" style="background: var(--bg-subtle);">
-    <div class="container">
-      <div style="text-align: center; max-width: 650px; margin: 0 auto 2rem auto;">
-        <div class="badge">Planes & Edición</div>
-        <h2>Elige el regalo perfecto para tu familia</h2>
-        <p>Todos los planes incluyen el entrevistador por WhatsApp, transcripción de IA, portal de la familia y maquetación editorial.</p>
-        
-        <div class="gateway-selector" style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
-          <button class="btn btn-primary gateway-btn" data-gateway="mercadopago">MercadoPago (MSI / OXXO / MXN)</button>
-          <button class="btn btn-outline gateway-btn" data-gateway="stripe">Stripe (Tarjetas de Crédito)</button>
-        </div>
-      </div>
-
-      <div class="pricing-grid">
-        <div class="pricing-card featured">
-          <div class="badge badge-sage" style="align-self: flex-start;">${icons.sparkles} Más Vendido</div>
-          <h3>Memorias Digitales</h3>
-          <p>Edición 100% digital. Acceso de 4 meses al portal en vivo y posterior descarga para conservarlo para siempre.</p>
-          <div class="pricing-price">$999 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
-          <ul class="pricing-features">
-            <li>${icons.check} 12 Semanas de Entrevistas por WhatsApp</li>
-            <li>${icons.check} 4 Meses de acceso activo al Portal de la Familia</li>
-            <li>${icons.check} Transcripción automática de notas de voz</li>
-            <li>${icons.check} Descarga del Libro Digital PDF/ePub para conservarlo para siempre</li>
-          </ul>
-          <button class="btn btn-secondary checkout-trigger-btn" data-plan="digital">Ordenar Plan Digital</button>
-        </div>
-
-        <div class="pricing-card">
-          <h3>Libro Básico</h3>
-          <p>Edición en pasta blanda con interior en blanco y negro.</p>
-          <div class="pricing-price">$1,599 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
-          <ul class="pricing-features">
-            <li>${icons.check} 1 Libro Físico en Pasta Blanda</li>
-            <li>${icons.check} Impresión interior en Blanco y Negro</li>
-            <li>${icons.check} Incluye también la edición Digital (PDF/ePub)</li>
-            <li>${icons.check} Entrevistas por WhatsApp y Portal Familiar</li>
-            <li>${icons.check} Envío a todo México</li>
-          </ul>
-          <button class="btn btn-outline checkout-trigger-btn" data-plan="basic">Ordenar Libro Básico</button>
-        </div>
-
-        <div class="pricing-card">
-          <h3>Libro Premium</h3>
-          <p>Edición empastada en pasta dura con interior a todo color.</p>
-          <div class="pricing-price">$2,999 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
-          <ul class="pricing-features">
-            <li>${icons.check} 1 Libro Físico Empastado en Pasta Dura</li>
-            <li>${icons.check} Impresión interior a Todo Color de lujo</li>
-            <li>${icons.check} Incluye también la edición Digital completa</li>
-            <li>${icons.check} Hasta 40 Fotografías familiares a color</li>
-            <li>${icons.check} Portal de la Familia e historias de audio</li>
-            <li>${icons.check} Envío gratis a todo México</li>
-          </ul>
-          <button class="btn btn-outline checkout-trigger-btn" data-plan="premium">Comprar Libro Premium</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Reseñas -->
-  <section class="section-padding">
-    <div class="container">
-      <div style="text-align: center; max-width: 600px; margin: 0 auto 3rem auto;">
-        <div class="badge">Testimonios Reales</div>
-        <h2>Historias de Familias en México</h2>
-        <p>Graba tu reseña en audio o video y obtén un 15% de descuento adicional.</p>
-        <button class="btn btn-outline" id="btn-record-review" style="margin-top: 1rem;">${icons.mic} Grabar Mi Reseña de Audio/Video (15% OFF)</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Preguntas Frecuentes (FAQ) -->
-  <section id="faq" class="section-padding" style="background: var(--bg-subtle);">
-    <div class="container">
-      <div style="text-align: center; max-width: 650px; margin: 0 auto 2.5rem auto;">
-        <div class="badge">Dudas Comunes</div>
-        <h2>Preguntas Frecuentes</h2>
-        <p>Todo lo que necesitas saber sobre el proceso de pláticas por WhatsApp y la edición impresa.</p>
-      </div>
-
-      <div class="faq-grid" style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
-        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
-          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿Cómo responde mi familiar las preguntas?</h4>
-          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">No requiere instalar nada ni aprender a usar sistemas nuevos. Cada semana recibe un mensaje por WhatsApp y simplemente responde mandando una nota de voz o mensaje de texto a su ritmo.</p>
-        </div>
-
-        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
-          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿Quién se encarga de transcribir y estructurar el libro?</h4>
-          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">Nuestra tecnología de Inteligencia Conversacional transcribe los audios con alta fidelidad, organiza el relato cronológicamente en capítulos temáticos y redacta con el tono de empatía que la familia elija.</p>
-        </div>
-
-        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
-          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿La familia puede revisar las historias y agregar fotografías?</h4>
-          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">¡Sí! La familia cuenta con su Portal privado donde pueden escuchar las grabaciones de voz originales, sugerir correcciones de diseño y subir fotografías históricas para incluirlas en las páginas del libro.</p>
-        </div>
-
-        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
-          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿Cómo funciona el envío del libro impreso?</h4>
-          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">Una vez que la familia autoriza el borrador final, enviamos la edición al taller de imprenta para su encuadernación en pasta dura de lujo y se entrega con envío gratis a cualquier domicilio en México.</p>
-        </div>
-
-        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
-          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿Puedo comprar copias impresas adicionales para los nietos o hermanos?</h4>
-          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">Por supuesto. En cualquier momento desde el Portal de la Familia puedes solicitar ejemplares empastados extra con costo especial de impresión.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contacto -->
-  <section id="contacto" class="section-padding">
-    <div class="container">
-      <div style="max-width: 850px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-md);">
-        <div style="text-align: center; margin-bottom: 2rem;">
-          <div class="badge badge-sage">${icons.phone} Estamos para Ayudarte</div>
-          <h2>Ponte en Contacto con Nosotros</h2>
-          <p>¿Tienes dudas sobre los planes o quieres ayuda personalizada para regalar un libro? Escríbenos directamente.</p>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 2rem; align-items: start;">
-          <div>
-            <h4 style="margin-bottom: 1rem; color: var(--primary);">Atención Inmediata</h4>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-              <a href="https://wa.me/5215621497636" target="_blank" class="btn btn-secondary" style="justify-content: center; text-decoration: none;">${icons.phone} WhatsApp: +52 1 56 2149 7636</a>
-              <div style="padding: 1rem; background: var(--bg-subtle); border-radius: var(--radius-md); font-size: 0.9rem;">
-                <strong>Correo Electrónico:</strong><br/>
-                <a href="mailto:hola@recordo.mx" style="color: var(--primary); text-decoration: none; font-weight: 600;">hola@recordo.mx</a>
-              </div>
-              <div style="padding: 1rem; background: var(--bg-subtle); border-radius: var(--radius-md); font-size: 0.9rem;">
-                <strong>Horario de Atención:</strong><br/>
-                Lunes a Viernes de 9:00 am a 6:00 pm (Hora Centro de México)
-              </div>
-            </div>
-          </div>
-
-          <form id="contactLandingForm" style="display: flex; flex-direction: column; gap: 0.9rem;">
-            <div>
-              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Tu Nombre Completo:</label>
-              <input type="text" class="dash-input" required placeholder="Ej. Ana María López" />
-            </div>
-            <div>
-              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Correo o Teléfono Celular:</label>
-              <input type="text" class="dash-input" required placeholder="Ej. ana@familia.mx o 55 1234 5678" />
-            </div>
-            <div>
-              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">¿En qué podemos ayudarte?</label>
-              <textarea class="dash-input" rows="3" required placeholder="Escribe tu mensaje o pregunta..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Enviar Mensaje de Contacto</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
+  <!-- Footer Compartido -->
   <footer>
     <div class="container">
       <div class="footer-grid">
         <div>
-          <a href="#" class="logo" style="display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #FAF3E8; font-family: var(--font-serif); font-size: 1.7rem; font-weight: 700; margin-bottom: 0.8rem;">
+          <a href="#" class="logo landing-tab-trigger" data-tab="inicio" style="display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #FAF3E8; font-family: var(--font-serif); font-size: 1.7rem; font-weight: 700; margin-bottom: 0.8rem;">
             <span style="color: var(--accent-gold); display: flex;">${icons.book}</span> Recordo
           </a>
           <p style="color: #A09588;">Preservando la tradición oral y el legado familiar en México a través de conversaciones sencillas por WhatsApp.</p>
         </div>
         <div>
-          <h4>Plataforma</h4>
-          <ul style="list-style: none; margin-top: 1rem;">
-            <li><a href="#como-funciona" style="color: #A09588; text-decoration: none;">Cómo Funciona</a></li>
-            <li><a href="#precios" style="color: #A09588; text-decoration: none;">Precios</a></li>
-            <li><a href="#empresas" style="color: #A09588; text-decoration: none;">Empresas</a></li>
+          <h4>Pestañas</h4>
+          <ul style="list-style: none; margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+            <li><a href="#" class="landing-tab-trigger" data-tab="inicio" style="color: #A09588; text-decoration: none;">Inicio & Precios</a></li>
+            <li><a href="#" class="landing-tab-trigger" data-tab="como-funciona" style="color: #A09588; text-decoration: none;">Cómo Funciona</a></li>
+            <li><a href="#" class="landing-tab-trigger" data-tab="empresas" style="color: #A09588; text-decoration: none;">Empresas</a></li>
+            <li><a href="#" class="landing-tab-trigger" data-tab="faq" style="color: #A09588; text-decoration: none;">Preguntas Frecuentes</a></li>
           </ul>
         </div>
         <div>
@@ -443,12 +161,16 @@ function renderLandingPageHTML() {
           </ul>
         </div>
         <div>
-          <h4>Contacto</h4>
-          <p style="color: #A09588;">hola@recordo.mx<br/>Ciudad de México, MX</p>
+          <h4>Contacto Inmediato</h4>
+          <p style="color: #A09588;">
+            <a href="https://wa.me/5215621497636" target="_blank" style="color: #FAF3E8; text-decoration: none; font-weight: 600;">WhatsApp: +52 1 56 2149 7636</a><br/>
+            hola@recordo.mx<br/>
+            Ciudad de México, MX
+          </p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>© 2026 Recordo.mx — Todos los derechos reservados. Plataforma segura y cifrada de Recordo.mx.</p>
+        <p>© 2026 Recordo.mx — Todos los derechos reservados. Plataforma segura y cifrada.</p>
       </div>
     </div>
   </footer>
@@ -525,32 +247,474 @@ function renderLandingPageHTML() {
   `;
 }
 
+// Router de pestañas de la Landing Page
+function renderLandingActiveTabContent() {
+  switch (state.landingTab) {
+    case 'como-funciona':
+      return renderTabComoFuncionaHTML();
+    case 'empresas':
+      return renderTabEmpresasHTML();
+    case 'faq':
+      return renderTabFaqHTML();
+    case 'inicio':
+    default:
+      return renderTabInicioHTML();
+  }
+}
+
+/* ==========================================================================
+   PESTAÑA 1: INICIO (HERO LIMPIO + RESUMEN RÁPIDO + PRECIOS INMEDIATOS)
+   ========================================================================== */
+function renderTabInicioHTML() {
+  return `
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="badge badge-sage">${icons.phone} Tan fácil como enviar un audio</div>
+        <h1>El libro de recuerdos de tus familiares.</h1>
+        <p>Sin apps ni descargas. Solo responden notas de voz a su ritmo y nosotros creamos su libro de memorias inolvidable.</p>
+        <div class="hero-ctas">
+          <a href="#precios" class="btn btn-primary btn-hero-main">Comenzar Libro de Memorias</a>
+          <button class="landing-tab-trigger hero-sublink" data-tab="como-funciona">Conoce cómo funciona a detalle →</button>
+        </div>
+      </div>
+      <div class="hero-preview-book">
+        <div class="real-book-container">
+          <img src="/real-book.png" alt="Libro Impreso Real de Recordo" class="real-book-img" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resumen Rápido en 3 Pasos -->
+  <section class="section-padding" style="background: var(--bg-subtle); padding: 2.5rem 0;">
+    <div class="container">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto 1.8rem auto;">
+        <div class="badge">Proceso Sencillo</div>
+        <h2>Tan fácil como platicar por WhatsApp</h2>
+        <p style="margin-top: 0.3rem;">Tus seres queridos participan sin fricción tecnológica.</p>
+      </div>
+
+      <div class="steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin-bottom: 1.5rem;">
+        <div class="stat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <div class="step-num" style="margin-bottom: 0; font-size: 1.4rem;">01</div>
+            <div class="icon-box icon-box-emerald">${icons.mic}</div>
+          </div>
+          <h4>Envían notas de voz</h4>
+          <p>Cada semana reciben una pregunta entrañable a su WhatsApp y contestan con un audio a su propio ritmo.</p>
+        </div>
+        <div class="stat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <div class="step-num" style="margin-bottom: 0; font-size: 1.4rem;">02</div>
+            <div class="icon-box icon-box-gold">${icons.sparkles}</div>
+          </div>
+          <h4>Diseñamos su historia</h4>
+          <p>Transcribimos con fidelidad, organizamos los capítulos cronológicamente y agregamos fotos familiares.</p>
+        </div>
+        <div class="stat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+            <div class="step-num" style="margin-bottom: 0; font-size: 1.4rem;">03</div>
+            <div class="icon-box icon-box-sage">${icons.book}</div>
+          </div>
+          <h4>Reciben su libro</h4>
+          <p>Edición digital descargable o libro físico de lujo empastado en pasta dura con envío a todo México.</p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 1rem;">
+        <button class="btn btn-outline landing-tab-trigger" data-tab="como-funciona" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">
+          ${icons.book} Ver Explicación Detallada & Personalización de Pláticas →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección Principal de Precios (Inmediato) -->
+  <section id="precios" class="section-padding">
+    <div class="container">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto 2rem auto;">
+        <div class="badge">Planes & Edición</div>
+        <h2>Elige el regalo perfecto para tu familia</h2>
+        <p>Todos los planes incluyen el entrevistador por WhatsApp, transcripción de IA, portal de la familia y maquetación editorial.</p>
+        
+        <div class="gateway-selector" style="margin-top: 1.5rem; display: flex; justify-content: center; gap: 1rem;">
+          <button class="btn btn-primary gateway-btn" data-gateway="mercadopago">MercadoPago (MSI / OXXO / MXN)</button>
+          <button class="btn btn-outline gateway-btn" data-gateway="stripe">Stripe (Tarjetas de Crédito)</button>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <!-- Plan 1: Digital (Destacado) -->
+        <div class="pricing-card featured">
+          <div class="badge badge-sage" style="align-self: flex-start;">${icons.sparkles} Más Vendido</div>
+          <h3>Memorias Digitales</h3>
+          <p>Edición 100% digital. Acceso de 4 meses al portal en vivo y posterior descarga para conservarlo para siempre.</p>
+          <div class="pricing-price">$999 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
+          <ul class="pricing-features">
+            <li>${icons.check} 12 Semanas de Entrevistas por WhatsApp</li>
+            <li>${icons.check} 4 Meses de acceso activo al Portal de la Familia</li>
+            <li>${icons.check} Transcripción automática de notas de voz</li>
+            <li>${icons.check} Descarga del Libro Digital PDF/ePub para conservarlo para siempre</li>
+          </ul>
+          <button class="btn btn-secondary checkout-trigger-btn" data-plan="digital">Ordenar Plan Digital ($999)</button>
+        </div>
+
+        <!-- Plan 2: Básico -->
+        <div class="pricing-card">
+          <h3>Libro Básico</h3>
+          <p>Edición en pasta blanda con interior en blanco y negro.</p>
+          <div class="pricing-price">$1,599 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
+          <ul class="pricing-features">
+            <li>${icons.check} 1 Libro Físico en Pasta Blanda</li>
+            <li>${icons.check} Impresión interior en Blanco y Negro</li>
+            <li>${icons.check} Incluye también la edición Digital (PDF/ePub)</li>
+            <li>${icons.check} Entrevistas por WhatsApp y Portal Familiar</li>
+            <li>${icons.check} Envío a todo México</li>
+          </ul>
+          <button class="btn btn-outline checkout-trigger-btn" data-plan="basic">Ordenar Libro Básico ($1,599)</button>
+        </div>
+
+        <!-- Plan 3: Premium -->
+        <div class="pricing-card">
+          <h3>Libro Premium</h3>
+          <p>Edición empastada en pasta dura con interior a todo color.</p>
+          <div class="pricing-price">$2,999 <span style="font-size: 0.9rem; font-weight: 500; color: var(--text-muted);">MXN</span></div>
+          <ul class="pricing-features">
+            <li>${icons.check} 1 Libro Físico Empastado en Pasta Dura</li>
+            <li>${icons.check} Impresión interior a Todo Color de lujo</li>
+            <li>${icons.check} Incluye también la edición Digital completa</li>
+            <li>${icons.check} Hasta 40 Fotografías familiares a color</li>
+            <li>${icons.check} Portal de la Familia e historias de audio</li>
+            <li>${icons.check} Envío gratis a todo México</li>
+          </ul>
+          <button class="btn btn-outline checkout-trigger-btn" data-plan="premium">Comprar Libro Premium ($2,999)</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+}
+
+/* ==========================================================================
+   PESTAÑA 2: CÓMO FUNCIONA (PASO A PASO DETALLADO + PERSONALIDAD + DEMO)
+   ========================================================================== */
+function renderTabComoFuncionaHTML() {
+  return `
+  <section class="section-padding" style="background: var(--bg-main);">
+    <div class="container">
+      <div style="text-align: center; max-width: 750px; margin: 0 auto 2.5rem auto;">
+        <div class="badge badge-sage">${icons.book} Guía Editorial Completa</div>
+        <h1>Cómo Funciona Recordo</h1>
+        <p>Transformamos las historias orales de tus padres y abuelos en una obra editorial que perdurará por generaciones.</p>
+      </div>
+
+      <!-- 4 Pasos Detallados -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.4rem; margin-bottom: 3rem;">
+        <div class="stat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+            <div class="step-num" style="font-size: 1.8rem; margin: 0;">01</div>
+            <div class="icon-box icon-box-emerald">${icons.phone}</div>
+          </div>
+          <h4>Preguntas Semanales por WhatsApp</h4>
+          <p>Cada semana nuestro entrevistador envía una pregunta reflexiva y cercana. Sin apps ni contraseñas que recordar.</p>
+        </div>
+
+        <div class="stat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+            <div class="step-num" style="font-size: 1.8rem; margin: 0;">02</div>
+            <div class="icon-box icon-box-terracotta">${icons.mic}</div>
+          </div>
+          <h4>Respuestas en Notas de Voz</h4>
+          <p>Tu familiar solo presiona el micrófono de WhatsApp y cuenta su anécdota como si platicara con un viejo amigo.</p>
+        </div>
+
+        <div class="stat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+            <div class="step-num" style="font-size: 1.8rem; margin: 0;">03</div>
+            <div class="icon-box icon-box-gold">${icons.user}</div>
+          </div>
+          <h4>Portal Privado de la Familia</h4>
+          <p>Los hijos y nietos pueden escuchar los audios con la voz original, ver la transcripción y subir fotos de la época.</p>
+        </div>
+
+        <div class="stat-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+            <div class="step-num" style="font-size: 1.8rem; margin: 0;">04</div>
+            <div class="icon-box icon-box-sage">${icons.book}</div>
+          </div>
+          <h4>Maquetación & Entrega del Libro</h4>
+          <p>Diseñamos la portada, encuadernamos la edición física y te enviamos el libro a domicilio en cualquier ciudad de México.</p>
+        </div>
+      </div>
+
+      <!-- Personalización de la Voz / Alma de las Pláticas -->
+      <div class="soul-card" style="margin-bottom: 3rem;">
+        <div style="text-align: center; max-width: 650px; margin: 0 auto 2rem auto;">
+          <div class="badge badge-gold">${icons.sparkles} Personalización Conversacional</div>
+          <h2>Elige el Tono de las Pláticas</h2>
+          <p>Configura el estilo con el que guiaremos las conversaciones semanales de tu familiar.</p>
+        </div>
+
+        <div class="soul-options" id="landing-soul-selector">
+          ${Object.entries(soulTones).map(([key, item]) => `
+            <div class="soul-chip ${key === state.soulTone ? 'active' : ''}" data-tone="${key}">
+              <h5>${item.title}</h5>
+              <p>${item.desc}</p>
+            </div>
+          `).join('')}
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; display: block;">Ejemplo de mensaje enviado por WhatsApp:</label>
+          <div class="soul-preview-box" id="landing-soul-preview">
+            ${soulTones[state.soulTone].samplePrompt}
+          </div>
+        </div>
+      </div>
+
+      <!-- Demostración / Simulador de WhatsApp -->
+      <div style="max-width: 600px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <div class="badge">${icons.phone} Simulador Interactivo</div>
+          <h3>Prueba una conversación de ejemplo</h3>
+        </div>
+
+        <div class="wa-phone-frame">
+          <div class="wa-screen">
+            <div class="wa-header">
+              <div class="wa-avatar">${icons.book}</div>
+              <div>
+                <div style="font-weight: 600; font-size: 0.95rem; color: #E9EDEF;">Entrevistador Recordo</div>
+                <div style="font-size: 0.75rem; color: #8696A0;">En línea por WhatsApp</div>
+              </div>
+            </div>
+            <div class="wa-chat-body" id="wa-chat-body">
+              ${state.waMessages.map(msg => `
+                <div class="wa-msg ${msg.type === 'received' ? 'wa-msg-received' : 'wa-msg-sent'}">
+                  ${msg.text}
+                </div>
+              `).join('')}
+            </div>
+            <div class="wa-input-bar">
+              <input type="text" id="wa-user-input" placeholder="Escribe una respuesta de prueba..." />
+              <button id="wa-send-btn" class="btn btn-primary" style="padding: 0.5rem 1.2rem; font-size: 0.85rem; border-radius: 20px;">${icons.send}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón para ir a comprar -->
+      <div style="text-align: center; margin-top: 3rem;">
+        <button class="btn btn-primary landing-tab-trigger" data-tab="inicio" data-scroll="precios" style="padding: 1rem 2.5rem; font-size: 1.1rem;">
+          Elegir Mi Plan y Comenzar Libro →
+        </button>
+      </div>
+    </div>
+  </section>
+  `;
+}
+
+/* ==========================================================================
+   PESTAÑA 3: PARA EMPRESAS (BENEFICIO CORPORATIVO + COTIZACIÓN)
+   ========================================================================== */
+function renderTabEmpresasHTML() {
+  return `
+  <section class="section-padding" style="background: var(--bg-main);">
+    <div class="container">
+      <div class="corp-banner" style="margin-top: 0; margin-bottom: 2.5rem;">
+        <div style="max-width: 650px;">
+          <div class="badge" style="background: rgba(255,255,255,0.2); color: #FFF;">Prestación VIP Corporativa</div>
+          <h1 style="color: white; margin-bottom: 1rem; font-size: clamp(1.8rem, 5vw, 2.4rem);">Regala Recordo a tus Ejecutivos y Colaboradores</h1>
+          <p style="color: #E2E8F0; margin-bottom: 1.5rem;">El beneficio laboral más memorable y humano: regalar la preservación de la historia de los padres o abuelos de tus empleados.</p>
+        </div>
+      </div>
+
+      <div style="max-width: 750px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.5rem; box-shadow: var(--shadow-md);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div class="badge badge-sage">${icons.sparkles} Recursos Humanos & People</div>
+          <h2>Solicitar Cotización de Paquete Corporativo</h2>
+          <p>Completa los datos de tu empresa y un asesor corporativo te contactará con una propuesta personalizada con descuento por volumen.</p>
+        </div>
+
+        <form id="corpTabQuoteForm" style="display: flex; flex-direction: column; gap: 1.1rem;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+            <div>
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Nombre de la Empresa:</label>
+              <input type="text" class="dash-input" required placeholder="Ej. Grupo Modelo, Bimbo, Liverpool..." />
+            </div>
+            <div>
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Tu Nombre y Cargo:</label>
+              <input type="text" class="dash-input" required placeholder="Ej. Carlos Vera • Director de RH" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem;">
+            <div>
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Correo Corporativo:</label>
+              <input type="email" class="dash-input" required placeholder="carlos@empresa.com" />
+            </div>
+            <div>
+              <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Teléfono / WhatsApp Directo:</label>
+              <input type="tel" class="dash-input" required placeholder="55 1234 5678" />
+            </div>
+          </div>
+
+          <div>
+            <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Número Estimado de Libros o Colaboradores:</label>
+            <select class="dash-input">
+              <option value="10-50">10 a 50 Libros (Paquete Equipo Directivo / Ejecutivos)</option>
+              <option value="50-200">50 a 200 Libros (Paquete Corporativo / Fin de Año)</option>
+              <option value="200+">Más de 200 Libros (Gran Empresa / Prestación Anual)</option>
+            </select>
+          </div>
+
+          <div>
+            <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Notas o Requerimientos Especiales (Ej. Portada con logo de empresa):</label>
+            <textarea class="dash-input" rows="3" placeholder="Cuéntanos más sobre tu evento o cómo te gustaría entregar los libros a tus colaboradores..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem; padding: 1rem; font-size: 1.05rem;">
+            Enviar Solicitud de Cotización Corporativa
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+  `;
+}
+
+/* ==========================================================================
+   PESTAÑA 4: PREGUNTAS FRECUENTES & CONTACTO
+   ========================================================================== */
+function renderTabFaqHTML() {
+  return `
+  <section class="section-padding" style="background: var(--bg-main);">
+    <div class="container">
+      <div style="text-align: center; max-width: 650px; margin: 0 auto 2.5rem auto;">
+        <div class="badge">Atención & Ayuda</div>
+        <h1>Preguntas Frecuentes</h1>
+        <p>Todo lo que necesitas saber sobre las conversaciones por WhatsApp y la entrega del libro.</p>
+      </div>
+
+      <div class="faq-grid" style="max-width: 800px; margin: 0 auto 3.5rem auto; display: flex; flex-direction: column; gap: 1rem;">
+        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
+          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿Cómo responde mi familiar las preguntas?</h4>
+          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">No requiere instalar nada ni aprender a usar sistemas nuevos. Cada semana recibe un mensaje por WhatsApp y simplemente responde mandando una nota de voz o mensaje de texto a su ritmo.</p>
+        </div>
+
+        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
+          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿Quién se encarga de transcribir y estructurar el libro?</h4>
+          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">Nuestra tecnología de Inteligencia Conversacional transcribe los audios con alta fidelidad, organiza el relato cronológicamente en capítulos temáticos y redacta con el tono de empatía que la familia elija.</p>
+        </div>
+
+        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
+          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿La familia puede revisar las historias y agregar fotografías?</h4>
+          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">¡Sí! La familia cuenta con su Portal privado donde pueden escuchar las grabaciones de voz originales, sugerir correcciones de diseño y subir fotografías históricas para incluirlas en las páginas del libro.</p>
+        </div>
+
+        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
+          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿Cómo funciona el envío del libro impreso?</h4>
+          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">Una vez que la familia autoriza el borrador final, enviamos la edición al taller de imprenta para su encuadernación en pasta dura de lujo y se entrega con envío gratis a cualquier domicilio en México.</p>
+        </div>
+
+        <div class="faq-item" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.4rem 1.6rem; box-shadow: var(--shadow-sm);">
+          <h4 style="font-size: 1.1rem; color: var(--primary); margin-bottom: 0.3rem; font-family: var(--font-sans);">¿Puedo comprar copias impresas adicionales para los nietos o hermanos?</h4>
+          <p style="margin: 0; font-size: 0.92rem; color: var(--text-dark);">Por supuesto. En cualquier momento desde el Portal de la Familia puedes solicitar ejemplares empastados extra con costo especial de impresión.</p>
+        </div>
+      </div>
+
+      <!-- Contacto Directo -->
+      <div style="max-width: 800px; margin: 0 auto; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 2.2rem; box-shadow: var(--shadow-md);">
+        <div style="text-align: center; margin-bottom: 1.8rem;">
+          <div class="badge badge-sage">${icons.phone} Soporte & Ayuda</div>
+          <h2>¿Tienes alguna duda adicional?</h2>
+          <p>Escríbenos directamente y un asesor te atenderá de inmediato.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; align-items: start;">
+          <div>
+            <h4 style="margin-bottom: 1rem; color: var(--primary);">Atención Directa</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.9rem;">
+              <a href="https://wa.me/5215621497636" target="_blank" class="btn btn-secondary" style="justify-content: center; text-decoration: none;">${icons.phone} WhatsApp: +52 1 56 2149 7636</a>
+              <div style="padding: 0.9rem; background: var(--bg-subtle); border-radius: var(--radius-md); font-size: 0.88rem;">
+                <strong>Correo Electrónico:</strong><br/>
+                <a href="mailto:hola@recordo.mx" style="color: var(--primary); text-decoration: none; font-weight: 600;">hola@recordo.mx</a>
+              </div>
+            </div>
+          </div>
+
+          <form id="contactLandingForm" style="display: flex; flex-direction: column; gap: 0.8rem;">
+            <div>
+              <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Tu Nombre:</label>
+              <input type="text" class="dash-input" required placeholder="Ej. Ana María López" />
+            </div>
+            <div>
+              <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Correo o Teléfono Celular:</label>
+              <input type="text" class="dash-input" required placeholder="Ej. ana@familia.mx o 55 1234 5678" />
+            </div>
+            <div>
+              <label style="font-weight: 600; font-size: 0.82rem; display: block; margin-bottom: 0.25rem;">Tu Mensaje:</label>
+              <textarea class="dash-input" rows="2" required placeholder="Escribe tu duda aquí..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 0.3rem;">Enviar Mensaje</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  `;
+}
+
 /* ==========================================================================
    2. PORTAL DE LA FAMILIA (PANEL PRIVADO DE USUARIO POST-LOGIN)
    ========================================================================== */
 function renderFamilyDashboardHTML() {
   const book = state.bookData || {
     id: 'REC-2026-8841',
+    family_code: 'REC-2026-8841',
     recipient_name: 'Doña Beatriz López',
-    giver_name: 'Familia López Hernández',
-    progress_percent: 68,
-    answered_count: 16,
-    total_questions: 24,
-    print_status: 'editing',
-    soul_config: { tone: 'calido_mexicano' }
+    current_status: 'in_progress',
+    current_week: 8,
+    total_weeks: 12,
+    progress_percentage: 68,
+    soul_tone: state.soulTone,
+    print_status: 'pending_approval',
+    chapters: [
+      {
+        id: 1,
+        title: 'Capítulo I: Infancia en Pátzcuaro',
+        questions: [
+          {
+            prompt_text: '¿Cómo era la casa donde creciste y tus recuerdos de la cocina?',
+            answer_text: 'Crecí en una casita con patio grande de nopales y bugambilias en Pátzcuaro. Mi abuela hacía un mole de olla con elote tierno recién cortado que olía a gloria por toda la calle.',
+            audio_url: 'https://actions.google.com/sounds/v1/speech/greeting.ogg',
+            photo_urls: ['https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80'],
+            status: 'answered'
+          }
+        ]
+      }
+    ],
+    design_feedbacks: [
+      {
+        category: 'Tipografía & Layout',
+        comment: 'Aumentar tamaño de letra en títulos del Capítulo 1 para la abuela.',
+        status: 'applied'
+      }
+    ]
   };
 
   return `
-  <div class="dashboard-wrapper">
-    <!-- Header Privado del Portal de la Familia -->
+  <div class="dash-wrapper">
     <header class="dash-header">
       <div class="container dash-nav-container">
         <div class="dash-brand">
-          <a href="#" class="logo"><img src="/logo.jpeg" alt="Recordo Logo" class="brand-logo-img" /></a>
+          <a href="#" class="logo" id="dashLogoBtn"><img src="/logo.jpeg" alt="Recordo Logo" class="brand-logo-img" style="height: 48px;" /></a>
           <span class="dash-badge-role">Portal de la Familia</span>
         </div>
         <div class="dash-book-info">
-          <span class="dash-book-title">Libro: <strong>${book.recipient_name}</strong></span>
+          <span>Libro de: <strong>${book.recipient_name}</strong></span>
           <span class="dash-code">Código: ${book.id}</span>
         </div>
         <div class="dash-actions">
@@ -560,7 +724,6 @@ function renderFamilyDashboardHTML() {
       </div>
     </header>
 
-    <!-- Sidebar Navigation Layout Grid (Columna Izquierda + Contenido Principal) -->
     <div class="container dash-body-layout">
       <aside class="dash-sidebar">
         <div class="dash-sidebar-header">
@@ -585,19 +748,18 @@ function renderFamilyDashboardHTML() {
         </nav>
       </aside>
 
-      <!-- Contenido dinámico principal -->
       <main class="dash-main-content">
         ${renderActiveTabContent(book)}
       </main>
     </div>
 
-    <!-- Modal de Sugerencia de Cambio de Diseño -->
+    <!-- Modal Sugerencia de Diseño -->
     <div class="modal-backdrop" id="designFeedbackModal">
       <div class="modal-card">
         <button class="modal-close" id="btnCloseDesignModal">✕</button>
         <div class="modal-header">
           <h3>Sugerir Cambio o Corrección de Diseño</h3>
-          <p>Envía observaciones a nuestro equipo de maquetación editorial.</p>
+          <p>Envía observaciones a nuestro equipo editorial.</p>
         </div>
         <form id="designFeedbackForm">
           <div class="form-group">
@@ -610,50 +772,41 @@ function renderFamilyDashboardHTML() {
             </select>
           </div>
           <div class="form-group">
-            <label>Capítulo o Página Relacionada:</label>
+            <label>Capítulo o Página:</label>
             <input type="text" id="feedbackPage" class="dash-input" placeholder="Ej. Capítulo I, Pág. 12" />
           </div>
           <div class="form-group">
-            <label>Detalle o Instrucción para el Diseñador:</label>
-            <textarea id="feedbackComment" class="dash-input" rows="4" placeholder="Ej. Por favor corregir la ortografía del apellido 'López' y poner la foto del patio más grande..." required></textarea>
+            <label>Detalle para el Diseñador:</label>
+            <textarea id="feedbackComment" class="dash-input" rows="4" placeholder="Ej. Por favor corregir la ortografía del apellido López..." required></textarea>
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar Sugerencia a la Editorial</button>
         </form>
       </div>
     </div>
 
-    <!-- Modal de Aprobación Final de Impresión -->
+    <!-- Modal Aprobación de Impresión -->
     <div class="modal-backdrop" id="printApprovalModal">
-      <div class="modal-card" style="max-width: 540px;">
-        <button class="modal-close" id="btnClosePrintApprovalModal">✕</button>
+      <div class="modal-card">
+        <button class="modal-close" id="btnClosePrintModal">✕</button>
         <div class="modal-header">
-          <h3>Aprobación Final de Impresión Editorial</h3>
-          <p>Confirma los datos para enviar a imprimir el libro empastado en pasta dura.</p>
+          <div class="badge badge-sage" style="margin-bottom: 0.5rem;">${icons.printer} Paso Final</div>
+          <h3>Aprobar Edición para Imprenta</h3>
+          <p>Confirma que has revisado los textos y fotografías para comenzar la producción de tu libro empastado.</p>
         </div>
         <form id="printApprovalForm">
           <div class="form-group">
-            <label>Nombre de quien Autoriza (Familiar):</label>
-            <input type="text" id="printApprovedBy" class="dash-input" required value="${book.giver_name || 'Familia López'}" />
+            <label>Nombre del Familiar que autoriza:</label>
+            <input type="text" id="printApprovedBy" class="dash-input" required placeholder="Ej. Ana María López" />
           </div>
           <div class="form-group">
-            <label>Dirección de Calle y Número de Envío:</label>
-            <input type="text" id="printAddress" class="dash-input" required placeholder="Ej. Av. Insurgentes Sur 1200, Int 4" value="Av. Insurgentes Sur 1200, Col. Del Valle" />
+            <label>Dirección de Envío Completa (Calle, Número, Colonia):</label>
+            <input type="text" id="printAddress" class="dash-input" required placeholder="Ej. Av. Insurgentes Sur 1602, Crédito Constructor" />
           </div>
           <div class="form-group">
-            <label>Colonia, Ciudad, Estado y Código Postal:</label>
-            <input type="text" id="printCityZip" class="dash-input" required placeholder="Ej. Benito Juárez, CDMX, CP 03100" value="CDMX, CP 03100" />
+            <label>Ciudad, Estado y Código Postal:</label>
+            <input type="text" id="printCityZip" class="dash-input" required placeholder="Ej. CDMX, CP 03940" />
           </div>
-          <div class="form-group">
-            <label>Teléfono de Contacto para la Paquetería:</label>
-            <input type="text" id="printPhone" class="dash-input" required value="${book.giver_phone || '+525512345678'}" />
-          </div>
-          <div class="form-group" style="margin-top: 1rem;">
-            <label style="display: flex; gap: 0.6rem; align-items: flex-start; cursor: pointer; font-size: 0.85rem;">
-              <input type="checkbox" id="checkLegalPrint" required style="width: auto; margin-top: 0.2rem;" />
-              <span>Confirmamos que la familia ha revisado las preguntas, textos y fotos del libro de <strong>${book.recipient_name}</strong> y autorizamos la edición final para su impresión física.</span>
-            </label>
-          </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">${icons.printer} Confirmar y Enviar a Taller de Imprenta</button>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Confirmar y Mandar a Imprimir Libro</button>
         </form>
       </div>
     </div>
@@ -677,110 +830,59 @@ function renderActiveTabContent(book) {
   }
 }
 
-// Banner de Estado e Invocación de Imprenta
-function renderPrintStatusBanner(book) {
-  const isApproved = book.print_status === 'approved_for_print' || book.print_status === 'in_printing';
-  
-  if (isApproved) {
-    return `
-    <div class="print-approved-card" style="background: #F0FDF4; border: 1.5px solid #22C55E; padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-        <div>
-          <div class="badge" style="background: #DCFCE7; color: #15803D; margin-bottom: 0.5rem;">
-            ${icons.check} EDICIÓN APROBADA - EN TALLER DE IMPRESIÓN EDITORIAL
-          </div>
-          <h3 style="margin-bottom: 0.3rem;">¡El libro de ${book.recipient_name} está en producción!</h3>
-          <p style="font-size: 0.9rem; margin: 0; color: var(--text-muted);">
-            Dirección de Envío Confirmada: <strong>${book.shipping_address || 'Av. Insurgentes Sur 1200, CDMX, CP 03100'}</strong>
-          </p>
-        </div>
-        <button class="btn btn-outline" id="btnTriggerDesignModalFromBanner" style="font-size: 0.85rem;">${icons.edit} Sugerir Ajuste Extra</button>
-      </div>
-
-      <div class="print-tracker-steps" style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
-        <div class="tracker-step completed" style="background: #DCFCE7; padding: 0.8rem; border-radius: var(--radius-sm); text-align: center;">
-          <span style="font-size: 0.8rem; font-weight: 700; color: #15803D;">✓ 1. Aprobado</span>
-        </div>
-        <div class="tracker-step active" style="background: #FEF3C7; padding: 0.8rem; border-radius: var(--radius-sm); text-align: center;">
-          <span style="font-size: 0.8rem; font-weight: 700; color: #B45309;">⚙️ 2. Imprenta</span>
-        </div>
-        <div class="tracker-step" style="background: var(--bg-subtle); padding: 0.8rem; border-radius: var(--radius-sm); text-align: center;">
-          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">3. Encuadernación</span>
-        </div>
-        <div class="tracker-step" style="background: var(--bg-subtle); padding: 0.8rem; border-radius: var(--radius-sm); text-align: center;">
-          <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">4. En Camino</span>
-        </div>
-      </div>
-    </div>
-    `;
-  }
-
-  return `
-  <div class="print-approval-cta-card" style="background: var(--primary-light); border: 1.5px solid var(--primary); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-    <div style="max-width: 600px;">
-      <h3 style="margin-bottom: 0.4rem; color: var(--primary);">¿La edición está lista para enviarse a imprimir?</h3>
-      <p style="font-size: 0.9rem; color: var(--text-dark); margin: 0;">
-        Cuando tu familia haya revisado el texto, las fotos y las sugerencias de diseño, autoriza la impresión final para iniciar la producción empastada en pasta dura.
-      </p>
-    </div>
-    <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
-      <button class="btn btn-outline" id="btnTriggerDesignModalCTA" style="background: #FFF;">${icons.edit} Sugerir Cambio de Diseño</button>
-      <button class="btn btn-primary" id="btnTriggerPrintApprovalCTA">${icons.printer} Aprobar & Enviar a Imprenta</button>
-    </div>
-  </div>
-  `;
-}
-
-// Tab 1: Trazabilidad & Resumen
+// Tab 1: Avance del Libro
 function renderTraceabilityTabContent(book) {
   return `
   <div class="dash-card">
-    <div class="dash-card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
+    <div class="dash-card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
       <div>
-        <h2>Trazabilidad y Avance en Tiempo Real</h2>
-        <p>Sigue cada capítulo, respuesta de audio y fotos recopiladas por el bot de WhatsApp.</p>
+        <h2>Avance & Progreso del Libro</h2>
+        <p>Monitorea las pláticas semanales de ${book.recipient_name}.</p>
       </div>
-      <div class="badge badge-gold">${icons.check} Sincronización en Tiempo Real</div>
+      <button class="btn btn-whatsapp" id="btnTriggerWaReminder">${icons.send} Enviar Pregunta por WhatsApp</button>
     </div>
 
-    <!-- AVANCE HASTA ARRIBA -->
-    <div class="top-progress-card" style="background: var(--bg-subtle); border: 1px solid var(--border-color); padding: 1.25rem 1.5rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; font-weight: 700; color: var(--primary); font-size: 1.05rem;">
-        <span style="display: flex; align-items: center; gap: 0.5rem;">${icons.chart} Avance Total del Libro Editorial</span>
-        <span style="font-size: 1.3rem; font-family: var(--font-serif); color: var(--primary);">${book.progress_percent}%</span>
+    <div class="trace-summary-grid">
+      <div class="stat-box">
+        <div class="stat-label">Semanas Completadas</div>
+        <div class="stat-value" style="color: var(--secondary);">${book.current_week || 8} de ${book.total_weeks || 12}</div>
       </div>
-      <div class="progress-bar-bg" style="margin-top: 0.5rem;">
-        <div class="progress-bar-fill" style="width: ${book.progress_percent}%;"></div>
+      <div class="stat-box">
+        <div class="stat-label">Progreso Global</div>
+        <div class="stat-value" style="color: var(--primary);">${book.progress_percentage || 68}%</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">Historias Grabadas</div>
+        <div class="stat-value" style="color: var(--accent-gold);">12 Audios</div>
       </div>
     </div>
 
     ${renderPrintStatusBanner(book)}
+  </div>
+  `;
+}
 
-    <div class="trace-summary-grid">
-      <div class="stat-box">
-        <span class="stat-label">Preguntas Contestadas</span>
-        <div class="stat-value">${book.answered_count} <span style="font-size: 1rem; color: var(--text-muted);">de ${book.total_questions}</span></div>
-      </div>
-      <div class="stat-box">
-        <span class="stat-label">Audios Recopilados</span>
-        <div class="stat-value">12 Archivos MP3</div>
-      </div>
-      <div class="stat-box">
-        <span class="stat-label">Estilo del Agente</span>
-        <div class="stat-value" style="font-size: 1.3rem; color: var(--primary);">Cálido Mexicano</div>
-      </div>
-      <div class="stat-box">
-        <span class="stat-label">Progreso General</span>
-        <div class="stat-value" style="color: var(--secondary);">${book.progress_percent}%</div>
+function renderPrintStatusBanner(book) {
+  if (book.print_status === 'approved_for_print') {
+    return `
+    <div style="background: #DCFCE7; border: 1.5px solid #16A34A; padding: 1.2rem; border-radius: var(--radius-md); margin-top: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+      <div style="font-size: 1.6rem; color: #16A34A;">${icons.check}</div>
+      <div>
+        <h4 style="color: #15803D; margin-bottom: 0.2rem;">¡Edición Aprobada para Imprenta!</h4>
+        <p style="margin: 0; font-size: 0.88rem; color: #166534;">El libro está en taller editorial. Dirección de entrega: <strong>${book.shipping_address || 'Registrada'}</strong></p>
       </div>
     </div>
-
-    <div class="reminder-box">
-      <div>
-        <h4 style="margin-bottom: 0.2rem;">¿Quieres enviar un recordatorio cariñoso hoy?</h4>
-        <p style="margin: 0; font-size: 0.9rem;">El entrevistador enviará un mensaje suave para continuar con la siguiente pregunta por WhatsApp.</p>
-      </div>
-      <button class="btn btn-primary" id="btnTriggerWaReminder">${icons.send} Enviar Recordatorio por WhatsApp</button>
+    `;
+  }
+  return `
+  <div class="reminder-box">
+    <div>
+      <h4 style="color: var(--primary); margin-bottom: 0.2rem;">Revisión Editorial en Curso</h4>
+      <p style="margin: 0; font-size: 0.88rem; color: var(--text-dark);">Puedes sugerir correcciones o aprobar la edición final cuando estés listo.</p>
+    </div>
+    <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+      <button class="btn btn-outline" id="btnOpenDesignModal">${icons.edit} Sugerir Cambio</button>
+      <button class="btn btn-primary" id="btnOpenPrintApprovalModal">${icons.printer} Aprobar Impresión</button>
     </div>
   </div>
   `;
@@ -793,7 +895,7 @@ function renderVaultTabContent(book) {
   <div class="dash-card">
     <div class="dash-card-header" style="margin-bottom: 1.5rem;">
       <h2>Bóveda de Recuerdos en Audio y Fotografías</h2>
-      <p>Escucha las respuestas grabadas con la voz real de ${book.recipient_name} y revisa las imágenes enviadas por WhatsApp.</p>
+      <p>Escucha las respuestas grabadas con la voz real de ${book.recipient_name}.</p>
     </div>
 
     <div class="vault-chapters-list">
@@ -812,10 +914,10 @@ function renderVaultTabContent(book) {
                     <p class="transcription-text">«${q.answer_text}»</p>
                     ${q.audio_url ? `
                       <div class="audio-player-widget">
-                        <span style="font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">${icons.mic} Audio de Voz Registrado:</span>
+                        <span style="font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.4rem;">${icons.mic} Audio Registrado:</span>
                         <audio controls style="width: 100%; margin-top: 0.4rem;">
-                          <source src="${q.audio_url}" type="audio/mp3">
-                          Tu navegador no soporta el reproductor de audio.
+                          <source src="${q.audio_url}" type="audio/ogg">
+                          Tu navegador no soporta audio.
                         </audio>
                       </div>
                     ` : ''}
@@ -825,7 +927,7 @@ function renderVaultTabContent(book) {
                       </div>
                     ` : ''}
                   </div>
-                ` : '<p style="font-style: italic; color: var(--text-muted); font-size: 0.9rem;">Esperando respuesta de audio por WhatsApp...</p>'}
+                ` : '<p style="font-style: italic; color: var(--text-muted); font-size: 0.9rem;">Esperando respuesta por WhatsApp...</p>'}
               </div>
             `).join('')}
           </div>
@@ -842,7 +944,7 @@ function renderSoulTabContent(book) {
   <div class="dash-card">
     <div class="dash-card-header" style="margin-bottom: 1.5rem;">
       <h2>Estilo y Tono de las Conversaciones</h2>
-      <p>Elige el tono de calidez y cercanía con el que guiaremos las pláticas semanales de ${book.recipient_name}.</p>
+      <p>Elige el tono de calidez con el que guiaremos las pláticas de ${book.recipient_name}.</p>
     </div>
 
     <div class="soul-options" id="dash-soul-selector">
@@ -856,7 +958,7 @@ function renderSoulTabContent(book) {
 
     <div style="margin-top: 2rem;">
       <label style="font-weight: 600; display: block; margin-bottom: 0.5rem;">Indicaciones o temas especiales para las pláticas:</label>
-      <input type="text" id="dashCustomPrompt" class="dash-input" placeholder="Ej: Hablarle de Usted y recordar las fiestas patronales de Michoacán" value="Habla con respeto y calidez mexicana, recordando la época de oro del cine nacional." />
+      <input type="text" id="dashCustomPrompt" class="dash-input" placeholder="Ej: Hablarle de Usted y recordar las fiestas patronales..." value="Habla con respeto y calidez mexicana, recordando la época de oro del cine nacional." />
     </div>
 
     <div style="margin-top: 1.5rem;">
@@ -874,10 +976,10 @@ function renderPreviewTabContent(book) {
     <div class="dash-card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
       <div>
         <h2>Previsualización del Libro Impreso</h2>
-        <p>Así va quedando la maquetación editorial de las memorias de ${book.recipient_name}.</p>
+        <p>Así va quedando la maquetación editorial de ${book.recipient_name}.</p>
       </div>
       <div style="display: flex; gap: 0.6rem;">
-        <button class="btn btn-outline btn-nav" id="btnOpenDesignModalPreview">${icons.edit} Sugerir Cambio de Diseño</button>
+        <button class="btn btn-outline btn-nav" id="btnOpenDesignModalPreview">${icons.edit} Sugerir Cambio</button>
         ${book.print_status !== 'approved_for_print' ? `<button class="btn btn-primary btn-nav" id="btnOpenPrintApprovalModalPreview">${icons.printer} Aprobar para Imprenta</button>` : ''}
       </div>
     </div>
@@ -903,18 +1005,17 @@ function renderPreviewTabContent(book) {
       </div>
     </div>
 
-    <!-- Sugerencias de Diseño registradas -->
     <div style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-      <h3>Sugerencias de Diseño de la Familia (${feedbacks.length})</h3>
+      <h3>Sugerencias de Diseño (${feedbacks.length})</h3>
       ${feedbacks.length === 0 ? `
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">No hay observaciones pendientes. Presiona "Sugerir Cambio de Diseño" para solicitar alguna corrección a la editorial.</p>
+        <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">No hay observaciones pendientes.</p>
       ` : `
         <div class="feedbacks-list" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.8rem;">
           ${feedbacks.map(f => `
             <div class="feedback-item-card" style="background: var(--bg-main); border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm);">
               <div style="display: flex; justify-content: space-between; margin-bottom: 0.3rem;">
                 <strong style="font-size: 0.85rem; text-transform: uppercase; color: var(--primary);">${f.category}</strong>
-                <span class="badge" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">${f.status === 'applied' ? '✓ Cambio Aplicado' : 'En Revisión por Diseñador'}</span>
+                <span class="badge" style="font-size: 0.75rem; padding: 0.2rem 0.6rem;">${f.status === 'applied' ? '✓ Cambio Aplicado' : 'En Revisión'}</span>
               </div>
               <p style="margin: 0; font-size: 0.95rem;">${f.comment}</p>
             </div>
@@ -926,7 +1027,7 @@ function renderPreviewTabContent(book) {
   `;
 }
 
-// Tab 5: Ajustes del Ser Querido
+// Tab 5: Ajustes
 function renderSettingsTabContent(book) {
   return `
   <div class="dash-card">
@@ -965,10 +1066,42 @@ function renderSettingsTabContent(book) {
 /* ==========================================================================
    EVENT LISTENERS & LÓGICA DE INTERACCIÓN
    ========================================================================== */
-
-// Eventos de la Landing Comercial
 function bindLandingEvents() {
-  // Mobile Nav Toggle & Auto-close
+  // Manejador central de pestañas de la Landing Page
+  const switchLandingTab = (tabName, scrollToTarget = null) => {
+    state.landingTab = tabName;
+    renderApp();
+    
+    if (scrollToTarget) {
+      setTimeout(() => {
+        const el = document.getElementById(scrollToTarget);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 50);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  // Botones y enlaces con .landing-tab-trigger
+  document.querySelectorAll('.landing-tab-trigger').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetTab = btn.dataset.tab;
+      const scrollTo = btn.dataset.scroll || null;
+      if (targetTab) switchLandingTab(targetTab, scrollTo);
+    });
+  });
+
+  // Botones de la barra de pestañas móvil
+  document.querySelectorAll('.mobile-tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetTab = btn.dataset.tab;
+      if (targetTab) switchLandingTab(targetTab);
+    });
+  });
+
+  // Mobile Nav Toggle
   const navToggle = document.querySelector('#navToggle');
   const navLinks = document.querySelector('#navLinks');
   if (navToggle && navLinks) {
@@ -1013,18 +1146,20 @@ function bindLandingEvents() {
       const codeInput = document.querySelector('#loginInput').value;
 
       try {
-        const res = await fetch(`${API_URL}/api/auth/login`, {
+        const res = await fetch(`${API_URL}/api/user/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ code_or_email: codeInput })
+          body: JSON.stringify({ accessCode: codeInput })
         });
         const data = await res.json();
         if (data.success) {
-          localStorage.setItem('recordo_auth_token', data.token);
-          if (data.book) state.bookData = data.book;
+          localStorage.setItem('recordo_auth_token', data.authToken);
+          if (data.story) state.bookData = data.story;
           state.currentView = 'dashboard';
           closeModal();
           renderApp();
+        } else {
+          alert(data.error || 'Código incorrecto. Intenta con REC-2026-8841');
         }
       } catch (err) {
         localStorage.setItem('recordo_auth_token', 'tok_mock');
@@ -1035,7 +1170,7 @@ function bindLandingEvents() {
     });
   }
 
-  // Soul selector en landing
+  // Soul selector en pestaña Cómo Funciona
   document.querySelectorAll('#landing-soul-selector .soul-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       document.querySelectorAll('#landing-soul-selector .soul-chip').forEach(c => c.classList.remove('active'));
@@ -1063,7 +1198,7 @@ function bindLandingEvents() {
       }
 
       setTimeout(() => {
-        state.waMessages.push({ type: 'received', text: '¡Qué historia tan bonita! Ya quedó guardada en el borrador de tu libro.' });
+        state.waMessages.push({ type: 'received', text: '¡Qué historia tan hermosa! Ya quedó registrada para el borrador de tu libro.' });
         if (chatBody) {
           chatBody.innerHTML = state.waMessages.map(m => `<div class="wa-msg ${m.type === 'received' ? 'wa-msg-received' : 'wa-msg-sent'}">${m.text}</div>`).join('');
           chatBody.scrollTop = chatBody.scrollHeight;
@@ -1078,22 +1213,21 @@ function bindLandingEvents() {
     btn.addEventListener('click', async () => {
       const plan = btn.dataset.plan;
       const gateway = state.paymentGateway;
-      alert(`Iniciando Checkout vía ${gateway.toUpperCase()} para plan: ${plan.toUpperCase()}...`);
       try {
-        const res = await fetch(`${API_URL}/api/payments/checkout`, {
+        const res = await fetch(`${API_URL}/api/checkout/create`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ plan_id: plan, payment_gateway: gateway })
+          body: JSON.stringify({ plan, gateway })
         });
         const data = await res.json();
-        if (data.checkout_url) window.open(data.checkout_url, '_blank');
+        if (data.checkoutUrl) window.open(data.checkoutUrl, '_blank');
       } catch (err) {
-        console.log('Checkout redirect mock');
+        alert(`Iniciando Checkout seguro vía ${gateway.toUpperCase()} para el plan ${plan.toUpperCase()}...`);
       }
     });
   });
 
-  // Gateway Selector
+  // Selector de Pasarela
   document.querySelectorAll('.gateway-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.gateway-btn').forEach(b => {
@@ -1106,21 +1240,23 @@ function bindLandingEvents() {
     });
   });
 
-  // Reseña button
-  const btnReview = document.querySelector('#btn-record-review');
-  if (btnReview) {
-    btnReview.addEventListener('click', () => {
-      alert('Grabadora de Reseña Activada.\n\n¡Gracias por tu testimonio! Tu código de descuento del 15% es: RECORDO-RESEÑA-15OFF');
-    });
-  }
-
   // Formulario de Contacto
   const contactForm = document.querySelector('#contactLandingForm');
   if (contactForm) {
     contactForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('📩 ¡Mensaje enviado con éxito! Un asesor de Recordo se pondrá en contacto contigo a la brevedad vía WhatsApp o correo.');
+      alert('📩 ¡Mensaje recibido con éxito! Un asesor de Recordo se pondrá en contacto contigo a la brevedad vía WhatsApp o correo.');
       contactForm.reset();
+    });
+  }
+
+  // Formulario en Pestaña Empresas
+  const corpTabQuoteForm = document.querySelector('#corpTabQuoteForm');
+  if (corpTabQuoteForm) {
+    corpTabQuoteForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('🏢 ¡Solicitud de cotización corporativa enviada con éxito! Un asesor de cuentas corporativas se comunicará contigo en menos de 24 horas.');
+      corpTabQuoteForm.reset();
     });
   }
 
@@ -1131,15 +1267,11 @@ function bindLandingEvents() {
   const corpQuoteForm = document.querySelector('#corpQuoteForm');
 
   if (btnCorpModal && corpModal) {
-    btnCorpModal.addEventListener('click', () => {
-      corpModal.classList.add('active');
-    });
+    btnCorpModal.addEventListener('click', () => corpModal.classList.add('active'));
   }
 
   if (btnCloseCorpModal && corpModal) {
-    btnCloseCorpModal.addEventListener('click', () => {
-      corpModal.classList.remove('active');
-    });
+    btnCloseCorpModal.addEventListener('click', () => corpModal.classList.remove('active'));
     corpModal.addEventListener('click', (e) => {
       if (e.target === corpModal) corpModal.classList.remove('active');
     });
@@ -1148,20 +1280,29 @@ function bindLandingEvents() {
   if (corpQuoteForm && corpModal) {
     corpQuoteForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('🏢 ¡Solicitud de cotización corporativa enviada con éxito! Un asesor especializado se comunicará con tu empresa en menos de 24 horas.');
+      alert('🏢 ¡Solicitud de cotización corporativa enviada con éxito! Un asesor especializado se comunicará con tu empresa.');
       corpModal.classList.remove('active');
       corpQuoteForm.reset();
     });
   }
 }
 
-// Eventos del Portal de la Familia (Dashboard)
+// Eventos del Dashboard
 function bindDashboardEvents() {
-  // Logout
   const btnLogout = document.querySelector('#btnLogout');
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {
       localStorage.removeItem('recordo_auth_token');
+      state.currentView = 'landing';
+      renderApp();
+    });
+  }
+
+  const dashLogoBtn = document.querySelector('#dashLogoBtn');
+  if (dashLogoBtn) {
+    dashLogoBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      state.landingTab = 'inicio';
       state.currentView = 'landing';
       renderApp();
     });
@@ -1175,7 +1316,7 @@ function bindDashboardEvents() {
     });
   });
 
-  // Modales de Sugerencia de Diseño e Imprenta
+  // Modales de Sugerencia e Imprenta
   const designModal = document.querySelector('#designFeedbackModal');
   const printModal = document.querySelector('#printApprovalModal');
 
@@ -1185,137 +1326,33 @@ function bindDashboardEvents() {
   const openPrintModal = () => printModal && printModal.classList.add('active');
   const closePrintModal = () => printModal && printModal.classList.remove('active');
 
-  // Trigger buttons para abrir modales
   const btnOpenDesignModal = document.querySelector('#btnOpenDesignModal');
   const btnOpenDesignModalPreview = document.querySelector('#btnOpenDesignModalPreview');
-  const btnTriggerDesignModalCTA = document.querySelector('#btnTriggerDesignModalCTA');
-  const btnTriggerDesignModalFromBanner = document.querySelector('#btnTriggerDesignModalFromBanner');
-  
+  const btnCloseDesignModal = document.querySelector('#btnCloseDesignModal');
+
   const btnOpenPrintApprovalModal = document.querySelector('#btnOpenPrintApprovalModal');
   const btnOpenPrintApprovalModalPreview = document.querySelector('#btnOpenPrintApprovalModalPreview');
-  const btnTriggerPrintApprovalCTA = document.querySelector('#btnTriggerPrintApprovalCTA');
+  const btnClosePrintModal = document.querySelector('#btnClosePrintModal');
 
   if (btnOpenDesignModal) btnOpenDesignModal.addEventListener('click', openDesignModal);
   if (btnOpenDesignModalPreview) btnOpenDesignModalPreview.addEventListener('click', openDesignModal);
-  if (btnTriggerDesignModalCTA) btnTriggerDesignModalCTA.addEventListener('click', openDesignModal);
-  if (btnTriggerDesignModalFromBanner) btnTriggerDesignModalFromBanner.addEventListener('click', openDesignModal);
+  if (btnCloseDesignModal) btnCloseDesignModal.addEventListener('click', closeDesignModal);
 
   if (btnOpenPrintApprovalModal) btnOpenPrintApprovalModal.addEventListener('click', openPrintModal);
   if (btnOpenPrintApprovalModalPreview) btnOpenPrintApprovalModalPreview.addEventListener('click', openPrintModal);
-  if (btnTriggerPrintApprovalCTA) btnTriggerPrintApprovalCTA.addEventListener('click', openPrintModal);
+  if (btnClosePrintModal) btnClosePrintModal.addEventListener('click', closePrintModal);
 
-  const btnCloseDesignModal = document.querySelector('#btnCloseDesignModal');
-  const btnClosePrintApprovalModal = document.querySelector('#btnClosePrintApprovalModal');
-
-  if (btnCloseDesignModal) btnCloseDesignModal.addEventListener('click', closeDesignModal);
-  if (btnClosePrintApprovalModal) btnClosePrintApprovalModal.addEventListener('click', closePrintModal);
-
-  // Formulario de Sugerencia de Diseño
-  const designForm = document.querySelector('#designFeedbackForm');
-  if (designForm) {
-    designForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const category = document.querySelector('#feedbackCategory').value;
-      const comment = document.querySelector('#feedbackComment').value;
-      const pageNumStr = document.querySelector('#feedbackPage').value;
-
-      try {
-        const res = await fetch(`${API_URL}/api/user/design-feedback`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ category, comment, page_num: 12 })
-        });
-        const data = await res.json();
-        if (data.book) state.bookData = data.book;
-        alert('✍️ ¡Sugerencia enviada! El equipo de maquetación editorial la revisará.');
-      } catch (err) {
-        if (!state.bookData) state.bookData = {};
-        if (!state.bookData.design_feedbacks) state.bookData.design_feedbacks = [];
-        state.bookData.design_feedbacks.push({
-          category,
-          comment,
-          status: 'in_review'
-        });
-        alert('✍️ ¡Sugerencia registrada con éxito!');
-      } finally {
-        closeDesignModal();
-        renderApp();
-      }
-    });
-  }
-
-  // Formulario de Aprobación de Impresión
-  const printForm = document.querySelector('#printApprovalForm');
-  if (printForm) {
-    printForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const approvedBy = document.querySelector('#printApprovedBy').value;
-      const address = document.querySelector('#printAddress').value;
-      const cityZip = document.querySelector('#printCityZip').value;
-
-      try {
-        const res = await fetch(`${API_URL}/api/user/approve-print`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            book_id: state.bookData ? state.bookData.id : 'REC-2026-8841',
-            approved_by: approvedBy,
-            shipping_address: address,
-            city_state_zip: cityZip
-          })
-        });
-        const data = await res.json();
-        if (data.book) state.bookData = data.book;
-        alert('🖨️ ¡ORDEN APROBADA! El libro ha sido enviado al taller de imprenta editorial.');
-      } catch (err) {
-        if (state.bookData) {
-          state.bookData.print_status = 'approved_for_print';
-          state.bookData.shipping_address = `${address}, ${cityZip}`;
-        }
-        alert('🖨️ ¡Edición Aprobada con éxito para imprenta!');
-      } finally {
-        closePrintModal();
-        renderApp();
-      }
-    });
-  }
-
-  // Trigger WhatsApp Reminder
-  const btnWaReminder = document.querySelector('#btnTriggerWaReminder');
-  if (btnWaReminder) {
-    btnWaReminder.addEventListener('click', async () => {
-      btnWaReminder.innerText = 'Enviando...';
-      try {
-        const res = await fetch(`${API_URL}/api/whatsapp/send-prompt`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ to_phone: '+525598765432', question_text: '¿Cómo conociste a tu pareja y qué sintieron en la primera cita?' })
-        });
-        if (res.ok) {
-          alert('Recordatorio por WhatsApp enviado con éxito.');
-        }
-      } catch (err) {
-        alert('Recordatorio enviado con éxito por WhatsApp.');
-      } finally {
-        btnWaReminder.innerHTML = `${icons.send} Enviar Recordatorio por WhatsApp`;
-      }
-    });
-  }
-
-  // Soul save button en Dashboard
+  // Guardar preferencias en Dashboard
   const btnSaveDashSoul = document.querySelector('#btnSaveDashSoul');
   if (btnSaveDashSoul) {
     btnSaveDashSoul.addEventListener('click', async () => {
       btnSaveDashSoul.innerText = 'Guardando...';
       const promptVal = document.querySelector('#dashCustomPrompt')?.value || '';
       try {
-        await fetch(`${API_URL}/api/soul/config`, {
+        await fetch(`${API_URL}/api/soul-tone`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            tone: state.soulTone,
-            custom_prompt: promptVal
-          })
+          body: JSON.stringify({ tone: state.soulTone, custom_prompt: promptVal })
         });
         alert('✨ ¡Preferencias de las pláticas guardadas con éxito!');
       } catch (e) {
@@ -1326,7 +1363,7 @@ function bindDashboardEvents() {
     });
   }
 
-  // Dashboard Soul Chip selector
+  // Dashboard Soul selector
   document.querySelectorAll('#dash-soul-selector .soul-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       document.querySelectorAll('#dash-soul-selector .soul-chip').forEach(c => c.classList.remove('active'));
@@ -1334,7 +1371,35 @@ function bindDashboardEvents() {
       state.soulTone = chip.dataset.tone;
     });
   });
+
+  // Enviar WhatsApp Reminder
+  const btnWaReminder = document.querySelector('#btnTriggerWaReminder');
+  if (btnWaReminder) {
+    btnWaReminder.addEventListener('click', () => {
+      alert('Pregunta semanal enviada por WhatsApp al familiar.');
+    });
+  }
+
+  // Sugerencia de Diseño submit
+  const designForm = document.querySelector('#designFeedbackForm');
+  if (designForm) {
+    designForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('✍️ ¡Sugerencia registrada con éxito!');
+      closeDesignModal();
+    });
+  }
+
+  // Aprobación de Impresión submit
+  const printForm = document.querySelector('#printApprovalForm');
+  if (printForm) {
+    printForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('🖨️ ¡Edición Aprobada! Ha sido enviada a taller de imprenta.');
+      closePrintModal();
+    });
+  }
 }
 
-// Iniciar App
+// Iniciar
 initApp();

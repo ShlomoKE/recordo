@@ -99,22 +99,25 @@ function renderLandingPageHTML() {
   <nav class="navbar">
     <div class="container nav-container">
       <a href="#" class="logo"><img src="/logo.jpeg" alt="Recordo Logo" class="brand-logo-img" /></a>
-      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      </button>
+      
       <ul class="nav-links" id="navLinks">
         <li><a href="#como-funciona">Cómo Funciona</a></li>
         <li><a href="#empresas">Para Empresas</a></li>
         <li><a href="#precios">Precios</a></li>
         <li><a href="#faq">Preguntas Frecuentes</a></li>
         <li><a href="#contacto">Contacto</a></li>
-        <li><button class="btn-login-nav" id="btnOpenLoginNav">${icons.key} Acceso a Mi Libro</button></li>
-        <li class="mobile-cta"><a href="#precios" class="btn btn-primary btn-nav">Regalar Un Libro</a></li>
+        <li class="mobile-nav-item"><button class="btn btn-outline btn-nav" id="btnOpenLoginNav" style="width: 100%; justify-content: center; margin-top: 0.4rem;">${icons.key} Acceso a Mi Libro</button></li>
+        <li class="mobile-nav-item"><a href="#precios" class="btn btn-primary btn-nav" style="width: 100%; justify-content: center;">Regalar Un Libro</a></li>
       </ul>
+
       <div class="nav-right-actions">
         <button class="btn btn-outline btn-nav" id="btnOpenLogin">${icons.key} Acceder a Mi Libro</button>
         <a href="#precios" class="btn btn-primary btn-nav desktop-cta">Regalar Un Libro</a>
       </div>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
     </div>
   </nav>
 
@@ -964,11 +967,26 @@ function renderSettingsTabContent(book) {
 
 // Eventos de la Landing Comercial
 function bindLandingEvents() {
-  // Mobile Nav Toggle
+  // Mobile Nav Toggle & Auto-close
   const navToggle = document.querySelector('#navToggle');
   const navLinks = document.querySelector('#navLinks');
   if (navToggle && navLinks) {
-    navToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+    navToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navLinks.classList.toggle('active');
+    });
+
+    navLinks.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!navLinks.contains(e.target) && e.target !== navToggle) {
+        navLinks.classList.remove('active');
+      }
+    });
   }
 
   // Modales de Login

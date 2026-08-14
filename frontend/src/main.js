@@ -127,10 +127,11 @@ function renderLandingPageHTML() {
       <div class="hero-content">
         <div class="badge badge-sage">${icons.phone} Tan fácil como enviar un audio</div>
         <h1>El libro de recuerdos de tus familiares.</h1>
-        <p>Sin apps ni descargas. Solo responden notas de voz a su ritmo y nosotros nos encargamos de transcribir, diseñar y crear su libro de memorias.</p>
+        <p>Sin apps ni descargas. Solo responden notas de voz a su ritmo y nosotros creamos su libro de memorias inolvidable.</p>
         <div class="hero-ctas">
-          <a href="#precios" class="btn btn-primary">Comenzar Libro de Memorias</a>
-          <a href="#simulador" class="btn btn-outline">Probar Simulador de WhatsApp</a>
+          <a href="#precios" class="btn btn-primary btn-hero-main">Comenzar Libro de Memorias</a>
+          <a href="#simulador" class="btn btn-outline desktop-only-btn">Probar Simulador de WhatsApp</a>
+          <a href="#como-funciona" class="hero-sublink mobile-only-link">Conoce cómo funciona ↓</a>
         </div>
       </div>
       <div class="hero-preview-book">
@@ -150,7 +151,7 @@ function renderLandingPageHTML() {
         <p style="margin-top: 0.3rem;">Diseñado especialmente para que tus familiares participen sin fricción tecnológica ni descargas complicadas.</p>
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 2.2rem;">
+      <div class="steps-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 2.2rem;">
         <div class="stat-card">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
             <div class="step-num" style="margin-bottom: 0; font-size: 1.5rem;">01</div>
@@ -213,7 +214,7 @@ function renderLandingPageHTML() {
   </section>
 
   <!-- Simulador de WhatsApp -->
-  <section id="simulador" class="section-padding" style="background: var(--bg-subtle);">
+  <section id="simulador" class="section-padding desktop-only-section" style="background: var(--bg-subtle);">
     <div class="container">
       <div style="text-align: center; max-width: 650px; margin: 0 auto 2.5rem auto;">
         <div class="badge">Demostración Interactiva</div>
